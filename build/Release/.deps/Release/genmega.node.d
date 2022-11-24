@@ -1,0 +1,1 @@
+cmd_Release/genmega.node := ln -f "Release/obj.target/genmega.node" "Release/genmega.node" 2>/dev/null || (rm -rf "Release/genmega.node" && cp -af "Release/obj.target/genmega.node" "Release/genmega.node")
