@@ -49,7 +49,7 @@ INCS_Debug := \
 	-I/home/zepedro/.cache/node-gyp/16.17.0/deps/uv/include \
 	-I/home/zepedro/.cache/node-gyp/16.17.0/deps/zlib \
 	-I/home/zepedro/.cache/node-gyp/16.17.0/deps/v8/include \
-	-I/home/zepedro/Desktop/genmega/node-libgenmega/node_modules/node-addon-api
+	-I/home/zepedro/Documents/Git/genmega-sdk/node_modules/node-addon-api
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=genmega' \
@@ -95,7 +95,7 @@ INCS_Release := \
 	-I/home/zepedro/.cache/node-gyp/16.17.0/deps/uv/include \
 	-I/home/zepedro/.cache/node-gyp/16.17.0/deps/zlib \
 	-I/home/zepedro/.cache/node-gyp/16.17.0/deps/v8/include \
-	-I/home/zepedro/Desktop/genmega/node-libgenmega/node_modules/node-addon-api
+	-I/home/zepedro/Documents/Git/genmega-sdk/node_modules/node-addon-api
 
 OBJS := \
 	$(obj).target/$(TARGET)/src/genmega.o \
