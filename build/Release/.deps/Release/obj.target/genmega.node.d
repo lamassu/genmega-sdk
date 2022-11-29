@@ -1,1 +1,0 @@
-cmd_Release/obj.target/genmega.node := g++ -o Release/obj.target/genmega.node -shared -pthread -rdynamic -m64  -Wl,-soname=genmega.node -Wl,--start-group Release/obj.target/genmega/src/genmega.o Release/obj.target/genmega/src/devices/barcode-scanner.o -Wl,--end-group -lgenmegadevice64 -lgenemv64_api -lm -lusb-1.0 -ldl
