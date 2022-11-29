@@ -1,4 +1,4 @@
 const genmega = require('./build/Release/genmega.node')
 
-exports.BarcodeScan = addon.BarcodeScan
-exports.BarcodeCancelScan = addon.BarcodeCancelScan
+exports.BarcodeScan = genmega.BarcodeScan
+exports.BarcodeCancelScan = genmega.BarcodeCancelScan
