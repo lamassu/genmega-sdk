@@ -17,7 +17,7 @@ void ScannedBarcodeData(int iId, int iKind, BCSScanData *BcsScanData) {
     scannedDataResult.valid = true;
 }
 
-void ErrorHandler(int iRet, unsigned char *errmsg) {
+void BCSErrorHandler(int iRet, unsigned char *errmsg) {
     printf("\n DEBUG: BCS FAIL: %d\n", iRet);
     printf(" DEBUG: DEVICE ERROR CODE: %s\n", errmsg);
     BCS_Close();
@@ -43,7 +43,7 @@ std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentation
         printf("\n DEBUG: BCS READY TO SCAN \n");
     } else {
         BCS_GetLastError(errmsg);
-        ErrorHandler(iRet, errmsg);
+        BCSErrorHandler(iRet, errmsg);
         return std::to_string(iRet);
     }
 
@@ -64,7 +64,7 @@ std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentation
         }
     } else {
         BCS_GetLastError(errmsg);
-        ErrorHandler(iRet, errmsg);
+        BCSErrorHandler(iRet, errmsg);
         return std::to_string(iRet);
     }
 
@@ -89,7 +89,7 @@ std::string BCS_CancelScan() {
         printf("\n DEBUG: BCS SCAN CANCELED \n");
     } else {
         BCS_GetLastError(errmsg);
-        ErrorHandler(iRet, errmsg);
+        BCSErrorHandler(iRet, errmsg);
     }
 
     return std::to_string(iRet);
