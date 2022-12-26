@@ -121,6 +121,62 @@ Napi::Object BAUGetSupportCurrencyV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(BAUGetSupportCurrency(), env);
 }
 
+
+// BAU: Bill Acceptor Unit
+
+Napi::String BillValidatorStatus(const Napi::CallbackInfo &info) { 
+    Napi::Env env = info.Env();
+
+    char szPortName[128];
+
+    // serial port name
+    std::string serialPortName = (std::string)info[0].ToString();
+    strcpy(szPortName, serialPortName.c_str());
+
+    return Napi::String::New(env, BAU_Status(szPortName));
+}
+
+Napi::String BillValidatorInit(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    char szPortName[128];
+    char szSetData[512];
+
+    // serial port name
+    std::string serialPortName = (std::string)info[0].ToString();
+    strcpy(szPortName, serialPortName.c_str());
+    // currency and denomination data
+    std::string denominationData = (std::string)info[1].ToString();
+    strcpy(szSetData, denominationData.c_str());
+
+    return Napi::String::New(env, BAU_Init(szPortName, szSetData));
+}
+
+Napi::String BillValidatorEnable(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    int iBillResult = 0;
+    return Napi::String::New(env, BAU_Enable(iBillResult));
+}
+
+Napi::String BillValidatorStack() {
+    Napi::Env env = info.Env();
+
+    return Napi::String::New(env, BAU_Stack());
+}
+
+Napi::String BillValidatorDisable() {
+    Napi::Env env = info.Env();
+
+    return Napi::String::New(env, BAU_Disable());
+}
+
+Napi::String BillValidatorReject() {
+    Napi::Env env = info.Env();
+
+    return Napi::String::New(env, BAU_Reject());
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
     exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
