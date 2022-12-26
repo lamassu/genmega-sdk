@@ -8,4 +8,4 @@ std::string BAU_Stack();
 std::string BAU_Reject();
 std::string BAU_Init(char* serialPortName, char* denominationData);
 
-#endif 
+#endif
