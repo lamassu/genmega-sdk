@@ -159,19 +159,19 @@ Napi::String BillValidatorEnable(const Napi::CallbackInfo &info) {
     return Napi::String::New(env, BAU_Enable(iBillResult));
 }
 
-Napi::String BillValidatorStack() {
+Napi::String BillValidatorStack(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return Napi::String::New(env, BAU_Stack());
 }
 
-Napi::String BillValidatorDisable() {
+Napi::String BillValidatorDisable(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return Napi::String::New(env, BAU_Disable());
 }
 
-Napi::String BillValidatorReject() {
+Napi::String BillValidatorReject(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return Napi::String::New(env, BAU_Reject());
