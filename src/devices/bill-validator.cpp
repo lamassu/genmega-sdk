@@ -20,7 +20,7 @@ std::string BAU_Status(char* serialPortName) {
     std::string result = "";
 
     // open device serial port
-    iRet = BAU_Open(serialPortName, szVerInfo);
+    iRet = BAU_Open(serialPortName, OUT szVerInfo);
     if (iRet != HM_DEV_OK || HM_DEV_ALREADY_OPEN) {
         BAU_GetLastError(errmsg);
         BAUErrorHandler(iRet, errmsg);
@@ -44,7 +44,7 @@ std::string BAU_Init(char* serialPortName, char* denominationData) {
     unsigned char szVerInfo[10];
 
     // open device serial port
-    iRet = BAU_Open(serialPortName, szVerInfo);
+    iRet = BAU_Open(serialPortName, OUT szVerInfo);
     if (iRet != HM_DEV_OK || HM_DEV_ALREADY_OPEN) {
         BAU_GetLastError(errmsg);
         BAUErrorHandler(iRet, errmsg);
@@ -53,9 +53,7 @@ std::string BAU_Init(char* serialPortName, char* denominationData) {
 
     // Initialize BAU
     iRet = BAU_Reset();
-    if(iRet == HM_DEV_OK) {
-        return std::to_string(iRet);
-    } else {
+    if(iRet != HM_DEV_OK) {
         BAU_GetLastError(errmsg);
         BAUErrorHandler(iRet, errmsg);
         return std::to_string(iRet);
@@ -101,12 +99,11 @@ std::string BAU_Disable() {
     if (iRet == HM_DEV_OK) {
         printf("\n DEBUG: BAU BILL ACCEPTANCE DISABLED \n");
         return std::to_string(iRet);
-    } else {
-        BAU_GetLastError(errmsg);
-        BAUErrorHandler(iRet, errmsg);
-        return "ERROR: " + std::to_string(iRet);
     }
-
+    BAU_GetLastError(errmsg);
+    BAUErrorHandler(iRet, errmsg);
+    return "ERROR: " + std::to_string(iRet);
+    
 }
 
 std::string BAU_Reject() {
