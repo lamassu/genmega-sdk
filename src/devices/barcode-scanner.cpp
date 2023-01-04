@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <thread>
 #include <time.h>
 
 #include "genmegadevice/HmDeviceIF.h"
