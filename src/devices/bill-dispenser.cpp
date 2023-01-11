@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 #include <unistd.h>
 
 #include "genmegadevice/HmDeviceIF.h"
@@ -39,11 +40,15 @@ std::string CDU_Status(char* serialPortName) {
 }
 
 
-std::string CDU_Dispense(int *dispenseData) {
+std::string CDU_Dispense(int numberNotesCassetteOne, int numberNotesCassetteTwo) {
     unsigned char errmsg[6] = {0};
     int iRet = 0;
+    int dispenseData[6] = {0};
 	DISPENSED_RESULT result[6];
 	CDU_STATUS CduDisplayStatus;
+
+    dispenseData[0] = numberNotesCassetteOne;
+    dispenseData[1] = numberNotesCassetteTwo;
 
     iRet = CDU_Dispense(dispenseData, result);
     if (iRet != HM_DEV_OK ) {
@@ -51,7 +56,8 @@ std::string CDU_Dispense(int *dispenseData) {
         CDUErrorHandler(iRet, errmsg);
         return "ERROR: " + std::to_string(iRet);
     }
-    if (CduDisplayStatus.iDispenseType == PRESENT_TYPE) {
+    iRet = CDU_Status(&CduDisplayStatus);
+    if (iRet == HM_DEV_OK && CduDisplayStatus.iDispenseType == PRESENT_TYPE) {
         iRet = CDU_Present();
         if (iRet == HM_DEV_OK) {
             CDU_Close();
@@ -62,9 +68,9 @@ std::string CDU_Dispense(int *dispenseData) {
     return "ERROR: " + std::to_string(iRet);
 }
 
-std::string CDU_Init(char* serialPortName, char* licenseKey, char, int cassetteNumber) {
+std::string CDU_Init(char* serialPortName, char* licenseKey, int cassetteNumber) {
     unsigned char errmsg[6] = {0};
-    int iRet, resetMode = 0;  // Reset mode(0: Normal, 1: Forced)
+    int iRet = 0, resetMode = 0;  // Reset mode(0: Normal, 1: Forced)
     unsigned char szVerInfo[15]={0};
 
     if(strlen(licenseKey) != 15) {

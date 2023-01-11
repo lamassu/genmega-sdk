@@ -14,3 +14,6 @@ exports.BAUCancel = bau.BAUCancel
 exports.BAUReject = bau.BAUReject
 exports.BAUStack = bau.BAUStack
 exports.BAUGetSupportCurrency = bau.BAUGetSupportCurrency
+exports.BillDispenserInit = genmega.BillDispenserInit
+exports.BillDispenserStatus = genmega.BillDispenserStatus
+exports.BillDispenserDispense = genmega.BillDispenserDispense
