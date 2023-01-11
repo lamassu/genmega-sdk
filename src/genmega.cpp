@@ -4,6 +4,7 @@
 
 #include "devices/barcode-scanner.hpp"
 #include "devices/bill-validator.hpp"
+#include "devices/bill-dispenser.hpp"
 
 
 // BCS: Barcode Scanner
@@ -86,6 +87,47 @@ Napi::String BillValidatorReject(const Napi::CallbackInfo &info) {
     return Napi::String::New(env, BAU_Reject());
 }
 
+// CDU: Bill Dispenser Unit
+
+Napi::String BillDispenserInit(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    char szPortName[128];
+    char szLicenseKey[20]={0};
+    int cassetteNumber = 0;
+
+    // serial port name
+    std::string serialPortName = (std::string)info[0].ToString();
+    strcpy(szPortName, serialPortName.c_str());
+    // CDU license key
+    std::string licenseKey = (std::string)info[1].ToString();
+    strcpy(szLicenseKey, licenseKey.c_str());
+    // number of cassettes
+    cassetteNumber = info[2].ToNumber();
+
+    return Napi::String::New(env, CDU_Init(szPortName, szLicenseKey, cassetteNumber));
+}
+
+Napi::String BillDispenserStatus(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    char szPortName[128];
+    // serial port name
+    std::string serialPortName = (std::string)info[0].ToString();
+    strcpy(szPortName, serialPortName.c_str());
+
+    return Napi::String::New(env, CDU_Status(szPortName));
+}
+
+Napi::String BillDispenserDispense(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    
+    int numberNotesCassetteOne = info[0].ToNumber();
+    int numberNotesCassetteTwo = info[1].ToNumber();
+
+    return Napi::String::New(env, CDU_Dispense(numberNotesCassetteOne, numberNotesCassetteTwo));
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
     exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
@@ -96,6 +138,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "BillValidatorStack"), Napi::Function::New(env, BillValidatorStack));
     exports.Set(Napi::String::New(env, "BillValidatorDisable"), Napi::Function::New(env, BillValidatorDisable));
     exports.Set(Napi::String::New(env, "BillValidatorReject"), Napi::Function::New(env, BillValidatorReject));
+    exports.Set(Napi::String::New(env, "BillDispenserInit"), Napi::Function::New(env, BillDispenserInit));
+    exports.Set(Napi::String::New(env, "BillDispenserStatus"), Napi::Function::New(env, BillDispenserStatus));
+    exports.Set(Napi::String::New(env, "BillDispenserDispense"), Napi::Function::New(env, BillDispenserDispense));
 
     // return `exports` object
     return exports;

@@ -8,3 +8,6 @@ exports.BillValidatorDisable = genmega.BillValidatorDisable
 exports.BillValidatorStack = genmega.BillValidatorStack
 exports.BillValidatorReject = genmega.BillValidatorReject
 exports.BillValidatorInit = genmega.BillValidatorInit
+exports.BillDispenserInit = genmega.BillDispenserInit
+exports.BillDispenserStatus = genmega.BillDispenserStatus
+exports.BillDispenserDispense = genmega.BillDispenserDispense
