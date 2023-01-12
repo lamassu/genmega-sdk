@@ -5,6 +5,7 @@
 #include "devices/barcode-scanner.hpp"
 #include "devices/bill-validator.hpp"
 #include "devices/bill-dispenser.hpp"
+#include "devices/leds.hpp"
 
 
 // BCS: Barcode Scanner
@@ -128,6 +129,28 @@ Napi::String BillDispenserDispense(const Napi::CallbackInfo &info) {
     return Napi::String::New(env, CDU_Dispense(numberNotesCassetteOne, numberNotesCassetteTwo));
 }
 
+// SIU: Sensor and Indicators Unit
+
+Napi::String LightUp(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    char szPortName[128];
+    // serial port name
+    std::string serialPortName = (std::string)info[0].ToString();
+    strcpy(szPortName, serialPortName.c_str());
+
+    int actionType = info[1].ToNumber();
+    int device = info[2].ToNumber();
+
+    return Napi::String::New(env, SIU_LightUp(szPortName, actionType, device));
+}
+
+Napi::String LightDown(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return Napi::String::New(env, SIU_LightDown());
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
     exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
@@ -141,6 +164,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "BillDispenserInit"), Napi::Function::New(env, BillDispenserInit));
     exports.Set(Napi::String::New(env, "BillDispenserStatus"), Napi::Function::New(env, BillDispenserStatus));
     exports.Set(Napi::String::New(env, "BillDispenserDispense"), Napi::Function::New(env, BillDispenserDispense));
+    exports.Set(Napi::String::New(env, "LightUp"), Napi::Function::New(env, LightUp));
+    exports.Set(Napi::String::New(env, "LightDown"), Napi::Function::New(env, LightDown));
 
     // return `exports` object
     return exports;

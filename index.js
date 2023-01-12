@@ -11,3 +11,6 @@ exports.BillValidatorInit = genmega.BillValidatorInit
 exports.BillDispenserInit = genmega.BillDispenserInit
 exports.BillDispenserStatus = genmega.BillDispenserStatus
 exports.BillDispenserDispense = genmega.BillDispenserDispense
+exports.LightUp = genmega.LightUp
+exports.LightDown = genmega.LightDown
+
