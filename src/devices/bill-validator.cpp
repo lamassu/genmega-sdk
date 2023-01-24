@@ -70,9 +70,10 @@ std::string BAU_Init(char* serialPortName, char* denominationData) {
     }
 }
 
-std::string BAU_Enable(int iBillResult) {
+std::string BAU_Enable() {
     unsigned char errmsg[6] = {0};
     int iRet = 0;
+    int iBillResult = 0;
 
     iRet = BAU_AcceptBill(SENDONLY, &iBillResult);
     while (1) {
@@ -114,7 +115,7 @@ std::string BAU_Reject() {
     iRet = BAU_Status(&BauStatus);
     if (iRet == HM_DEV_OK) {
         if (BauStatus.bEscrow) {
-            iRet = BAU_StackBill();
+            iRet = BAU_ReturnBill();
             if (iRet == HM_DEV_OK) {
                 printf("BAU RETURN SUCCESS\n");
                 return std::to_string(iRet);
@@ -146,3 +147,107 @@ std::string BAU_Stack() {
     BAUErrorHandler(iRet, errmsg);
     return "ERROR: " + std::to_string(iRet);
 }
+
+operationResult BAUGetLastError() {
+    unsigned char errmsg[6] = {0};
+    operationResult result;
+
+    BAU_GetLastError(errmsg);
+    result.data = std::string (reinterpret_cast<char const *>(errmsg));
+    return result;
+}
+
+operationResult BAUOpen(char* serialPortName) {
+    unsigned char szVerInfo[10];
+    int iRet = 0;
+    operationResult result;
+
+    iRet = BAU_Open(serialPortName, OUT szVerInfo);
+   
+    result.data = std::string (reinterpret_cast<char const *>(szVerInfo));
+    result.iRet = iRet;
+    return result;
+}
+
+operationResult BAUClose() {
+    operationResult result;
+
+    BAU_Close();
+    result.data = "";
+    return result;
+}
+
+operationResult BAUStatus() {
+    int iRet = 0;
+    BAU_STATUS BauStatus;
+    operationResult result;
+
+    iRet = BAU_Status(&BauStatus);
+    result.iRet = iRet;
+    if(iRet == HM_DEV_OK) {
+        result.data.push_back(BauStatus.bLineStatus);
+    } else {
+        result.data = "";
+    }
+    return result;
+}
+
+operationResult BAUSetEnableDenom(char* denominationData) {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = BAU_SetEnableDenom(denominationData);
+    result.iRet = iRet;
+    result.data = "";
+    return result;
+}
+
+operationResult BAUAcceptBill(int mode) {
+    int iRet = 0;
+    int iBillResult;
+    operationResult result;
+
+    iRet = BAU_AcceptBill(mode, &iBillResult);
+    result.iRet = iRet;
+    result.data = std::to_string(iBillResult);
+    return result;
+}
+
+
+operationResult BAUCancel() {
+    int iRet = 0;
+    int iBillResult;
+    operationResult result;
+
+    iRet = BAU_Cancel(&iBillResult);
+    result.iRet = iRet;
+    result.data = std::to_string(iBillResult);
+    return result;
+}
+
+
+operationResult BAUReturnBill() {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = BAU_ReturnBill();
+    result.iRet = iRet;
+    result.data = "";
+    return result;
+}
+
+operationResult BAUStackBill() {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = BAU_StackBill();
+    result.iRet = iRet;
+    result.data = "";
+    return result;
+}
+
+
+
+
+
+
