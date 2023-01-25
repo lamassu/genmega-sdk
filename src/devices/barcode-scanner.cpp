@@ -9,13 +9,13 @@
 struct {
     bool valid = false;
     bool canceled = false;
-    BCSScanData *scannedData;
+    BCSScanData scannedData;
 } scannedDataResult;
 
 
 void ScannedBarcodeData(int iId, int iKind, BCSScanData *BcsScanData) {
     printf("\n DEBUG: BCS BarCode Data: ID-%d, KIND-%d Data:%s\n", iId, iKind, BcsScanData->szCode);
-    scannedDataResult.scannedData = BcsScanData;
+    scannedDataResult.scannedData = *BcsScanData;
     scannedDataResult.valid = true;
 }
 
@@ -69,7 +69,7 @@ std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentation
                 BCS_Close();
                 return std::to_string(iRet);
             }
-            if (scannedDataResult.valid && scannedDataResult.scannedData->wSize > 0) {
+            if (scannedDataResult.valid && scannedDataResult.scannedData.wSize > 0) {
                 iRet = BCS_CancelScanCode();
                 break;
             }
@@ -82,8 +82,8 @@ std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentation
 
     BCS_Close();
 
-    std::string result(reinterpret_cast<char const *>(scannedDataResult.scannedData->szCode));
-
+    std::string result(reinterpret_cast<char const *>(scannedDataResult.scannedData.szCode));
+    
     return result;
 }
 
