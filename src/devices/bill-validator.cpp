@@ -21,7 +21,7 @@ std::string BAU_Status(char* serialPortName) {
 
     // open device serial port
     iRet = BAU_Open(serialPortName, OUT szVerInfo);
-    if (iRet != HM_DEV_OK || iRet != HM_DEV_ALREADY_OPEN) {
+    if (iRet != HM_DEV_OK && iRet != HM_DEV_ALREADY_OPEN) {
         BAU_GetLastError(errmsg);
         BAUErrorHandler(iRet, errmsg);
         return std::to_string(iRet);
@@ -45,7 +45,7 @@ std::string BAU_Init(char* serialPortName, char* denominationData) {
 
     // open device serial port
     iRet = BAU_Open(serialPortName, OUT szVerInfo);
-    if (iRet != HM_DEV_OK || iRet != HM_DEV_ALREADY_OPEN) {
+    if (iRet != HM_DEV_OK && iRet != HM_DEV_ALREADY_OPEN) {
         BAU_GetLastError(errmsg);
         BAUErrorHandler(iRet, errmsg);
         return std::to_string(iRet);
