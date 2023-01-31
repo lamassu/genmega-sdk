@@ -14,6 +14,7 @@ std::string BAU_Reject();
 std::string BAU_Init(char* serialPortName, char* denominationData);
 operationResult BAUGetLastError();
 operationResult BAUOpen(char* serialPortName);
+operationResult BAUReset();
 operationResult BAUClose();
 operationResult BAUStatus();
 operationResult BAUSetEnableDenom(char* denominationData);
@@ -21,5 +22,6 @@ operationResult BAUAcceptBill(int mode);
 operationResult BAUCancel();
 operationResult BAUReturnBill();
 operationResult BAUStackBill();
+operationResult BAUGetSupportCurrency();
 
 #endif

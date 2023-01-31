@@ -169,6 +169,16 @@ operationResult BAUOpen(char* serialPortName) {
     return result;
 }
 
+operationResult BAUReset() {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = BAU_Reset();
+    result.iRet = iRet;
+    result.data = "";
+    return result;
+}
+
 operationResult BAUClose() {
     operationResult result;
 
@@ -185,7 +195,32 @@ operationResult BAUStatus() {
     iRet = BAU_Status(&BauStatus);
     result.iRet = iRet;
     if(iRet == HM_DEV_OK) {
-        result.data.push_back(BauStatus.bLineStatus);
+        char bLineStatus = BauStatus.bLineStatus ? '1' : '0';
+        result.data.push_back(bLineStatus);
+        char bAccepting = BauStatus.bAccepting ? '1' : '0';
+        result.data.push_back(bAccepting);
+        char bEscrow = BauStatus.bEscrow ? '1' : '0';
+        result.data.push_back(bEscrow);
+        char bStacking = BauStatus.bStacking ? '1' : '0';
+        result.data.push_back(bStacking);
+        char bReturning = BauStatus.bReturning ? '1' : '0';
+        result.data.push_back(bReturning);
+        char bJammed = BauStatus.bJammed ? '1' : '0';
+        result.data.push_back(bJammed);
+        char bStackerFull = BauStatus.bStackerFull ? '1' : '0';
+        result.data.push_back(bStackerFull);
+        char bCassetteAttached = BauStatus.bCassetteAttached ? '1' : '0';
+        result.data.push_back(bCassetteAttached);
+        char bPaused = BauStatus.bPaused ? '1' : '0';
+        result.data.push_back(bPaused);
+        char bCalibration = BauStatus.bCalibration ? '1' : '0';
+        result.data.push_back(bCalibration);
+        char bFailure = BauStatus.bFailure ? '1' : '0';
+        result.data.push_back(bFailure);
+        char bPushNoPush = BauStatus.bPushNoPush ? '1' : '0';
+        result.data.push_back(bPushNoPush);
+        char bFlashDownload = BauStatus.bFlashDownload ? '1' : '0';
+        result.data.push_back(bFlashDownload);
     } else {
         result.data = "";
     }
@@ -243,6 +278,17 @@ operationResult BAUStackBill() {
     iRet = BAU_StackBill();
     result.iRet = iRet;
     result.data = "";
+    return result;
+}
+
+operationResult BAUGetSupportCurrency() {
+    int iRet = 0;
+    char szDenomData[512];
+    operationResult result;
+
+    iRet = BAU_GetSupportCurrency(szDenomData);
+    result.iRet = iRet;
+    result.data = szDenomData;
     return result;
 }
 
