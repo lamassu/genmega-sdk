@@ -8,22 +8,21 @@ exports.BAUOpen = function BAUOpen(serialPortName) {
     const { iRet, data } = genmega.BAUOpenV2(serialPortName);
     console.log('BAU Firmware Version: ', data);
     if(iRet < 0) console.error('BAU OPEN: ', iRet); 
-    return iRet;
+    return { iRet };
 }
 
 exports.BAUClose = function BAUClose() {
     genmega.BAUCloseV2();
-    return '0';
 }
 
 exports.BAUReset = function BAUReset() {
     const { iRet } = genmega.BAUResetV2();
-    return iRet;
+    return { iRet };
 }
 
 exports.BAUGetLastError = function BAUGetLastError() {
     const { data } = genmega.BAUGetLastErrorV2();
-    return data;
+    return { data };
 }
 
 
@@ -47,20 +46,20 @@ exports.BAUStatus = function BAUStatus() {
     result.bFailure = values[10];
     result.bPushNoPush = values[11];
     result.bFlashDownload = values[12];
-    return result;
+    return { iRet, result };
 }
 
 exports.BAUSetEnableDenom = function BAUSetEnableDenom(denominationData) {
     const { iRet } = genmega.BAUSetEnableDenomV2(denominationData);
     if(iRet < 0) console.error(`BAU SET ENABLE DENOM: ${iRet}`); 
-    return iRet;
+    return { iRet };
 }
 
 
 exports.BAUCancel = function BAUCancel() {
     const { iRet, data } = genmega.BAUCancelV2();
     if(iRet < 0) console.error(`BAU CANCEL BILL: ${iRet}`); 
-    return data;
+    return { iRet, data };
 }
 
 
@@ -71,7 +70,7 @@ exports.BAUEnable = function BAUEnable() {
     return new Promise((resolve, reject) => {
         const { iRet, data } = genmega.BAUAcceptBillV2(SENDONLY);
         if(iRet < 0) throw reject(new Error(`BAU ENABLE: ${iRet}`)); 
-        if(data != '0') return resolve(data);
+        if(data != '0') return resolve({ data });
         interval = setInterval(() => {
             const { iRet, data } = genmega.BAUAcceptBillV2(RECVONLY);
             if(data != '0' && iRet != 3) {
@@ -79,7 +78,7 @@ exports.BAUEnable = function BAUEnable() {
               result.iRet = iRet;
               clearInterval(interval);
               if (result.data && (result.iRet == 0)) {
-                  return resolve(result.data);
+                  return resolve({ data: result.data });
               } else reject(new Error(`BAU ENABLE: ${result.iRet}`)); 
             } 
           }, 2000);
@@ -89,18 +88,18 @@ exports.BAUEnable = function BAUEnable() {
 exports.BAUReject = function BAUReject() {
     const { iRet } = genmega.BAUReturnBillV2();
     if(iRet < 0) console.error(`BAU RETURN BILL: ${iRet}`); 
-    return iRet;
+    return { iRet };
 }
 
 exports.BAUStack = function BAUStack() {
     const { iRet } = genmega.BAUStackBillV2();
     if(iRet < 0) console.error(`BAU STACK BILL: ${iRet}`); 
-    return iRet;
+    return { iRet };
 }
 
 exports.BAUGetSupportCurrency = function BAUGetSupportCurrency() {
     const { iRet, data } = genmega.BAUGetSupportCurrencyV2();
     if(iRet < 0) console.error(`BAU GET SUPPORT CURRENCY: ${iRet}`); 
-    return data;
+    return { iRet, data };
 }
 
