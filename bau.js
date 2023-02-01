@@ -17,6 +17,7 @@ exports.BAUClose = function BAUClose() {
 
 exports.BAUReset = function BAUReset() {
     const { iRet } = genmega.BAUResetV2();
+    if(iRet < 0) console.error('BAU RESET: ', iRet); 
     return { iRet };
 }
 
