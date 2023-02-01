@@ -9,7 +9,7 @@ exports.BAUOpen = function BAUOpen(serialPortName) {
     const { iRet, data } = genmega.BAUOpenV2(serialPortName);
     console.log('BAU Firmware Version: ', data);
     if(iRet < 0) throw new Error('BAU OPEN: ', iRet); 
-    return iRet.toString();
+    return iRet;
 }
 
 exports.BAUClose = function BAUClose() {
@@ -19,12 +19,12 @@ exports.BAUClose = function BAUClose() {
 
 exports.BAUReset = function BAUReset() {
     const { iRet } = genmega.BAUResetV2();
-    return iRet.toString();
+    return iRet;
 }
 
 exports.BAUGetLastError = function BAUGetLastError() {
     const { data } = genmega.BAUGetLastErrorV2();
-    return data ;
+    return data;
 }
 
 
@@ -54,7 +54,7 @@ exports.BAUStatus = function BAUStatus() {
 exports.BAUSetEnableDenom = function BAUSetEnableDenom(denominationData) {
     const { iRet } = genmega.BAUSetEnableDenomV2(denominationData);
     if(iRet < 0) throw new Error(`BAU SET ENABLE DENOM: ${iRet}`); 
-    return iRet.toString();
+    return iRet;
 }
 
 
@@ -90,17 +90,17 @@ exports.BAUEnable = function BAUEnable() {
 exports.BAUReject = function BAUReject() {
     const { iRet } = genmega.BAUReturnBillV2();
     if(iRet < 0) throw new Error(`BAU RETURN BILL: ${iRet}`); 
-    return iRet.toString();
+    return iRet;
 }
 
 exports.BAUStack = function BAUStack() {
     const { iRet } = genmega.BAUStackBillV2();
     if(iRet < 0) throw new Error(`BAU STACK BILL: ${iRet}`); 
-    return iRet.toString();
+    return iRet;
 }
 
 exports.BAUGetSupportCurrency = function BAUGetSupportCurrency() {
-    const { iRet, data } = genmega.BAUStackBillV2();
+    const { iRet, data } = genmega.BAUGetSupportCurrencyV2();
     if(iRet < 0) throw new Error(`BAU GET SUPPORT CURRENCY: ${iRet}`); 
     return data;
 }
