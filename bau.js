@@ -5,10 +5,9 @@ const SENDONLY = 1
 const RECVONLY = 2
 
 exports.BAUOpen = function BAUOpen(serialPortName) {
-    if(!serialPortName) throw new Error('No serial port name provided!');
     const { iRet, data } = genmega.BAUOpenV2(serialPortName);
     console.log('BAU Firmware Version: ', data);
-    if(iRet < 0) throw new Error('BAU OPEN: ', iRet); 
+    if(iRet < 0) console.error('BAU OPEN: ', iRet); 
     return iRet;
 }
 
@@ -31,7 +30,7 @@ exports.BAUGetLastError = function BAUGetLastError() {
 exports.BAUStatus = function BAUStatus() {
     const result = {};
     const { iRet, data } = genmega.BAUStatusV2();
-    if(iRet < 0) throw new Error(`BAU STATUS: ${iRet}`);
+    if(iRet < 0) console.error(`BAU STATUS: ${iRet}`);
     const values = data.split("")
     //Alternatively, we can just return the current state 
     //but for testing purposes, we want to check if only one state is active
@@ -53,14 +52,14 @@ exports.BAUStatus = function BAUStatus() {
 
 exports.BAUSetEnableDenom = function BAUSetEnableDenom(denominationData) {
     const { iRet } = genmega.BAUSetEnableDenomV2(denominationData);
-    if(iRet < 0) throw new Error(`BAU SET ENABLE DENOM: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU SET ENABLE DENOM: ${iRet}`); 
     return iRet;
 }
 
 
 exports.BAUCancel = function BAUCancel() {
     const { iRet, data } = genmega.BAUCancelV2();
-    if(iRet < 0) throw new Error(`BAU CANCEL BILL: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU CANCEL BILL: ${iRet}`); 
     return data;
 }
 
@@ -89,19 +88,19 @@ exports.BAUEnable = function BAUEnable() {
 
 exports.BAUReject = function BAUReject() {
     const { iRet } = genmega.BAUReturnBillV2();
-    if(iRet < 0) throw new Error(`BAU RETURN BILL: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU RETURN BILL: ${iRet}`); 
     return iRet;
 }
 
 exports.BAUStack = function BAUStack() {
     const { iRet } = genmega.BAUStackBillV2();
-    if(iRet < 0) throw new Error(`BAU STACK BILL: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU STACK BILL: ${iRet}`); 
     return iRet;
 }
 
 exports.BAUGetSupportCurrency = function BAUGetSupportCurrency() {
     const { iRet, data } = genmega.BAUGetSupportCurrencyV2();
-    if(iRet < 0) throw new Error(`BAU GET SUPPORT CURRENCY: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU GET SUPPORT CURRENCY: ${iRet}`); 
     return data;
 }
 
