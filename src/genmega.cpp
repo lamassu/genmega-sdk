@@ -145,7 +145,7 @@ Napi::Object BAUSetEnableDenomV2(const Napi::CallbackInfo &info) {
     char szSetData[512];
 
     // currency and denomination data
-    std::string denominationData = (std::string)info[1].ToString();
+    std::string denominationData = (std::string)info[0].ToString();
     strcpy(szSetData, denominationData.c_str());
 
     return mapToNapiObject(BAUSetEnableDenom(szSetData), env);
