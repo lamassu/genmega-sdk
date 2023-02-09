@@ -65,16 +65,21 @@ exports.BAUCancel = function BAUCancel() {
 }
 
 
+// Returns the accepted denomination index or the iRet if an error occurred
 exports.BAUEnable = function BAUEnable() {
     let interval;
     let result = { iRet: 0, data: "" };
 
     return new Promise((resolve, reject) => {
         const { iRet, data } = genmega.BAUAcceptBillV2(SENDONLY);
-        if(iRet < 0) throw reject(new Error(`BAU ENABLE: ${iRet}`)); 
+        if(iRet < 0) return resolve({ iRet });
         if(data != '0') return resolve({ data });
         interval = setInterval(() => {
             const { iRet, data } = genmega.BAUAcceptBillV2(RECVONLY);
+            if(iRet < 0) {
+                clearInterval(interval);
+                return resolve({ iRet });
+            }
             if(data != '0' && iRet != 3) {
               result.data = data;
               result.iRet = iRet;
@@ -83,7 +88,7 @@ exports.BAUEnable = function BAUEnable() {
                   return resolve({ data: result.data });
               } else reject(new Error(`BAU ENABLE: ${result.iRet}`)); 
             } 
-          }, 2000);
+          }, 200);
       })
 }
 
