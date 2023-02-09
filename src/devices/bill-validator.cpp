@@ -197,6 +197,8 @@ operationResult BAUStatus() {
     if(iRet == HM_DEV_OK) {
         char bLineStatus = BauStatus.bLineStatus ? '1' : '0';
         result.data.push_back(bLineStatus);
+        char bIdling = BauStatus.bIdling ? '1' : '0';
+        result.data.push_back(bIdling);
         char bAccepting = BauStatus.bAccepting ? '1' : '0';
         result.data.push_back(bAccepting);
         char bEscrow = BauStatus.bEscrow ? '1' : '0';

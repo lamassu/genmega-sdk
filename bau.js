@@ -35,18 +35,19 @@ exports.BAUStatus = function BAUStatus() {
     //Alternatively, we can just return the current state 
     //but for testing purposes, we want to check if only one state is active
     result.bLineStatus = values[0];
-    result.bAccepting = values[1];
-    result.bEscrow = values[2];
-    result.bStacking = values[3];
-    result.bReturning = values[4];
-    result.bJammed = values[5];
-    result.bStackerFull = values[6];
-    result.bCassetteAttached = values[7];
-    result.bPaused = values[8];
-    result.bCalibration = values[9];
-    result.bFailure = values[10];
-    result.bPushNoPush = values[11];
-    result.bFlashDownload = values[12];
+    result.bIdling = values[1];
+    result.bAccepting = values[2];
+    result.bEscrow = values[3];
+    result.bStacking = values[4];
+    result.bReturning = values[5];
+    result.bJammed = values[6];
+    result.bStackerFull = values[7];
+    result.bCassetteAttached = values[8];
+    result.bPaused = values[9];
+    result.bCalibration = values[10];
+    result.bFailure = values[11];
+    result.bPushNoPush = values[12];
+    result.bFlashDownload = values[13];
     return { iRet, result };
 }
 
