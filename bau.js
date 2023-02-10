@@ -4,6 +4,8 @@ const genmega = require('./build/Release/genmega.node')
 const SENDONLY = 1
 const RECVONLY = 2
 
+let acceptingBill = false
+
 exports.BAUOpen = function BAUOpen(serialPortName) {
     const { iRet, data } = genmega.BAUOpenV2(serialPortName);
     console.log('BAU Firmware Version: ', data);
@@ -59,6 +61,7 @@ exports.BAUSetEnableDenom = function BAUSetEnableDenom(denominationData) {
 
 
 exports.BAUCancel = function BAUCancel() {
+    acceptingBill = false
     const { iRet, data } = genmega.BAUCancelV2();
     if(iRet < 0) console.error(`BAU CANCEL BILL: ${iRet}`); 
     return { iRet, data };
@@ -73,8 +76,13 @@ exports.BAUEnable = function BAUEnable() {
     return new Promise((resolve, reject) => {
         const { iRet, data } = genmega.BAUAcceptBillV2(SENDONLY);
         if(iRet < 0) return resolve({ iRet });
+        acceptingBill = true;
         if(data != '0') return resolve({ data });
         interval = setInterval(() => {
+            if(!acceptingBill) {
+                clearInterval(interval);
+                return resolve({ iRet: -100 }) // Bill acceptance was canceled externally
+            }
             const { iRet, data } = genmega.BAUAcceptBillV2(RECVONLY);
             if(iRet < 0) {
                 clearInterval(interval);
