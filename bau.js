@@ -28,6 +28,7 @@ exports.BAUStatus = function BAUStatus() {
     const result = {};
     const { iRet, data } = genmega.BAUStatusV2();
     if(iRet < 0) console.error(`BAU STATUS: ${iRet}`);
+    if(data === "") console.log(`BAU STATUS EMPTY!`)
     const values = data.split("")
     result.bLineStatus = values[0];
     result.bIdling = values[1];

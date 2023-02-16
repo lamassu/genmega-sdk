@@ -49,57 +49,6 @@ Napi::Object mapToNapiObject (operationResult result, Napi::Env env) {
     return obj;
 }
 
-Napi::String BillValidatorStatus(const Napi::CallbackInfo &info) { 
-    Napi::Env env = info.Env();
-
-    char szPortName[128];
-
-    // serial port name
-    std::string serialPortName = (std::string)info[0].ToString();
-    strcpy(szPortName, serialPortName.c_str());
-
-    return Napi::String::New(env, BAU_Status(szPortName));
-}
-
-Napi::String BillValidatorInit(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    char szPortName[128];
-    char szSetData[512];
-
-    // serial port name
-    std::string serialPortName = (std::string)info[0].ToString();
-    strcpy(szPortName, serialPortName.c_str());
-    // currency and denomination data
-    std::string denominationData = (std::string)info[1].ToString();
-    strcpy(szSetData, denominationData.c_str());
-
-    return Napi::String::New(env, BAU_Init(szPortName, szSetData));
-}
-
-Napi::String BillValidatorEnable(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    return Napi::String::New(env, BAU_Enable());
-}
-
-Napi::String BillValidatorStack(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    return Napi::String::New(env, BAU_Stack());
-}
-
-Napi::String BillValidatorDisable(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    return Napi::String::New(env, BAU_Disable());
-}
-
-Napi::String BillValidatorReject(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    return Napi::String::New(env, BAU_Reject());
-}
 
 // New v2
 
@@ -187,16 +136,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
     exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
     exports.Set(Napi::String::New(env, "BarcodeCancelScan"), Napi::Function::New(env, BarcodeCancelScan));
-    exports.Set(Napi::String::New(env, "BillValidatorStatus"), Napi::Function::New(env, BillValidatorStatus));
-    exports.Set(Napi::String::New(env, "BillValidatorInit"), Napi::Function::New(env, BillValidatorInit));
-    exports.Set(Napi::String::New(env, "BillValidatorEnable"), Napi::Function::New(env, BillValidatorEnable));
-    exports.Set(Napi::String::New(env, "BillValidatorStack"), Napi::Function::New(env, BillValidatorStack));
-    exports.Set(Napi::String::New(env, "BillValidatorDisable"), Napi::Function::New(env, BillValidatorDisable));
-    exports.Set(Napi::String::New(env, "BillValidatorReject"), Napi::Function::New(env, BillValidatorReject));
     exports.Set(Napi::String::New(env, "BAUGetLastErrorV2"), Napi::Function::New(env, BAUGetLastErrorV2));
     exports.Set(Napi::String::New(env, "BAUOpenV2"), Napi::Function::New(env, BAUOpenV2));
     exports.Set(Napi::String::New(env, "BAUResetV2"), Napi::Function::New(env, BAUResetV2));
-
     exports.Set(Napi::String::New(env, "BAUCloseV2"), Napi::Function::New(env, BAUCloseV2));
     exports.Set(Napi::String::New(env, "BAUStatusV2"), Napi::Function::New(env, BAUStatusV2));
     exports.Set(Napi::String::New(env, "BAUSetEnableDenomV2"), Napi::Function::New(env, BAUSetEnableDenomV2));
@@ -205,9 +147,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "BAUReturnBillV2"), Napi::Function::New(env, BAUReturnBillV2));
     exports.Set(Napi::String::New(env, "BAUStackBillV2"), Napi::Function::New(env, BAUStackBillV2));
     exports.Set(Napi::String::New(env, "BAUGetSupportCurrencyV2"), Napi::Function::New(env, BAUGetSupportCurrencyV2));
-
-
-
 
     // return `exports` object
     return exports;

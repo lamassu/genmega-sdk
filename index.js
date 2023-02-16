@@ -3,12 +3,6 @@ const bau = require('./bau')
 
 exports.BarcodeScan = genmega.BarcodeScan
 exports.BarcodeCancelScan = genmega.BarcodeCancelScan
-exports.BillValidatorStatus = genmega.BillValidatorStatus
-exports.BillValidatorEnable = genmega.BillValidatorEnable
-exports.BillValidatorDisable = genmega.BillValidatorDisable
-exports.BillValidatorStack = genmega.BillValidatorStack
-exports.BillValidatorReject = genmega.BillValidatorReject
-exports.BillValidatorInit = genmega.BillValidatorInit
 exports.BAUGetLastError = bau.BAUGetLastError
 exports.BAUOpen = bau.BAUOpen
 exports.BAUReset = bau.BAUReset
