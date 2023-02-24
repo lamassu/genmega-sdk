@@ -3,8 +3,18 @@
 #include <string>
 
 #include "devices/barcode-scanner.hpp"
+#include "devices/result.hpp"
 
-Napi::String BarcodeScan(const Napi::CallbackInfo &info) {
+
+Napi::Object mapToNapiObject (operationResult result, Napi::Env env) {
+    Napi::Object obj = Napi::Object::New(env);
+    obj.Set("iRet", result.iRet);
+    obj.Set("data", result.data);
+
+    return obj;
+}
+
+Napi::Object BarcodeScan(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     char szPortName[128];
@@ -17,13 +27,13 @@ Napi::String BarcodeScan(const Napi::CallbackInfo &info) {
     // mobile mode
     mobilePhoneMode = info[1].ToNumber();
 
-    return Napi::String::New(env, BCS_Scan(szPortName, mobilePhoneMode, presentationMode));
+    return mapToNapiObject(BCS_Scan(szPortName, mobilePhoneMode, presentationMode), env);
 }
 
-Napi::String BarcodeCancelScan(const Napi::CallbackInfo &info) {
+Napi::Object BarcodeCancelScan(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    return Napi::String::New(env, BCS_CancelScan());
+    return mapToNapiObject(BCS_CancelScan(), env);
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {

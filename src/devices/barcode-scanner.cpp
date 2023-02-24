@@ -25,7 +25,7 @@ void ErrorHandler(int iRet, unsigned char *errmsg) {
     BCS_Close();
 }
 
-std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentationMode) {
+operationResult BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentationMode) {
     // reset scanning variables
     scannedDataResult.valid = false;
     scannedDataResult.canceled = false;
@@ -33,6 +33,8 @@ std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentation
     unsigned char errmsg[6] = {0};
     int iRet = 0;
     time_t StartTime, CurTime;
+
+    operationResult result;
 
     BCS_CallBackRegister(ScannedBarcodeData);
 
@@ -47,7 +49,9 @@ std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentation
     } else {
         BCS_GetLastError(errmsg);
         ErrorHandler(iRet, errmsg);
-        return std::to_string(iRet);
+        result.iRet = iRet;
+        result.data = "";
+        return result;
     }
 
     iRet = BCS_AcceptScanCode(presentationMode);
@@ -59,15 +63,18 @@ std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentation
             if (scannedDataResult.canceled) {
                 iRet = BCS_CancelScanCode();
                 BCS_Close();
-                // should this return a custom error code informing that the scan was canceled intensionally?
-                return std::to_string(iRet);
+                result.iRet = iRet;
+                result.data = "";
+                return result;
             }
             time(&CurTime);
             if((StartTime+30) < CurTime){
                 printf("30sec Timeout and Cancel\n");
                 iRet = BCS_CancelScanCode();
                 BCS_Close();
-                return std::to_string(iRet);
+                result.iRet = iRet;
+                result.data = "";
+                return result;
             }
             if (scannedDataResult.valid && scannedDataResult.scannedData.wSize > 0) {
                 iRet = BCS_CancelScanCode();
@@ -77,25 +84,34 @@ std::string BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentation
     } else {
         BCS_GetLastError(errmsg);
         ErrorHandler(iRet, errmsg);
-        return std::to_string(iRet);
+        result.iRet = iRet;
+        result.data = "";
+        return result;
     }
 
     BCS_Close();
 
-    std::string result(reinterpret_cast<char const *>(scannedDataResult.scannedData.szCode));
+    std::string scanResult(reinterpret_cast<char const *>(scannedDataResult.scannedData.szCode));
+    result.data = scanResult;
+    result.iRet = iRet;
     
     return result;
 }
 
-std::string BCS_CancelScan() { 
+operationResult BCS_CancelScan() { 
     int iRet = 0;
     unsigned char errmsg[6] = {0};
+
+    operationResult result;
 
     scannedDataResult.canceled = true;
     scannedDataResult.valid = false;
 
     iRet = BCS_CancelScanCode();
     BCS_Close();
+
+    result.iRet = iRet;
+    result.data = "";
 
     if (iRet == HM_DEV_OK) {
         printf("\n DEBUG: BCS SCAN CANCELED \n");
@@ -104,5 +120,5 @@ std::string BCS_CancelScan() {
         ErrorHandler(iRet, errmsg);
     }
 
-    return std::to_string(iRet);
+    return result;
 }
