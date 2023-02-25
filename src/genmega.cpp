@@ -39,18 +39,7 @@ Napi::Object BarcodeCancelScan(const Napi::CallbackInfo &info) {
 }
 
 
-// BAU: Bill Acceptor Unit
-
-Napi::Object mapToNapiObject (operationResult result, Napi::Env env) {
-    Napi::Object obj = Napi::Object::New(env);
-    obj.Set("iRet", result.iRet);
-    obj.Set("data", result.data);
-
-    return obj;
-}
-
-
-// New v2
+// BAU new v2
 
 Napi::Object BAUGetLastErrorV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();

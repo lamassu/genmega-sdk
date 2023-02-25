@@ -1,10 +1,7 @@
+#include "result.hpp"
+
 #ifndef BILL_VALIDATOR_HPP
 #define BILL_VALIDATOR_HPP
-
-struct operationResult {
-    int iRet;
-    std::string data;
-};
 
 operationResult BAUGetLastError();
 operationResult BAUOpen(char* serialPortName);
