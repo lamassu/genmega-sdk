@@ -1,5 +1,8 @@
 //TODO: rewrite in js
 
+const _ = require('lodash/fp')
+const genmega = require('./build/Release/genmega.node')
+
 void CDUErrorHandler(int iRet, unsigned char *errmsg) {
     CDU_GetLastError(errmsg);
     printf("\n DEBUG: CDU FAIL: %d\n", iRet);

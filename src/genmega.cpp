@@ -122,10 +122,15 @@ Napi::Object BAUGetSupportCurrencyV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(BAUGetSupportCurrency(), env);
 }
 
+// CDU new v2
 
-// BAU: Bill Acceptor Unit
+Napi::Object CDUGetLastErrorV2(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
 
-Napi::String BillValidatorStatus(const Napi::CallbackInfo &info) { 
+    return mapToNapiObject(CDUGetLastError(), env);
+}
+
+Napi::Object CDUOpenV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     char szPortName[128];
@@ -134,89 +139,63 @@ Napi::String BillValidatorStatus(const Napi::CallbackInfo &info) {
     std::string serialPortName = (std::string)info[0].ToString();
     strcpy(szPortName, serialPortName.c_str());
 
-    return Napi::String::New(env, BAU_Status(szPortName));
+    return mapToNapiObject(CDUOpen(szPortName), env);
 }
 
-Napi::String BillValidatorInit(const Napi::CallbackInfo &info) {
+Napi::Object CDUCloseV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    char szPortName[128];
-    char szSetData[512];
-
-    // serial port name
-    std::string serialPortName = (std::string)info[0].ToString();
-    strcpy(szPortName, serialPortName.c_str());
-    // currency and denomination data
-    std::string denominationData = (std::string)info[1].ToString();
-    strcpy(szSetData, denominationData.c_str());
-
-    return Napi::String::New(env, BAU_Init(szPortName, szSetData));
+    return mapToNapiObject(CDUClose(), env);
 }
 
-Napi::String BillValidatorEnable(const Napi::CallbackInfo &info) {
+Napi::Object CDUStatusV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    int iBillResult = 0;
-    return Napi::String::New(env, BAU_Enable(iBillResult));
+    return mapToNapiObject(CDUStatus(), env); 
 }
 
-Napi::String BillValidatorStack(const Napi::CallbackInfo &info) {
+Napi::Object CDUVerifyLicenseKeyV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    return Napi::String::New(env, BAU_Stack());
-}
-
-Napi::String BillValidatorDisable(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    return Napi::String::New(env, BAU_Disable());
-}
-
-Napi::String BillValidatorReject(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    return Napi::String::New(env, BAU_Reject());
-}
-
-// CDU: Bill Dispenser Unit
-
-Napi::String BillDispenserInit(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    char szPortName[128];
     char szLicenseKey[20]={0};
-    int cassetteNumber = 0;
 
-    // serial port name
-    std::string serialPortName = (std::string)info[0].ToString();
-    strcpy(szPortName, serialPortName.c_str());
     // CDU license key
     std::string licenseKey = (std::string)info[1].ToString();
     strcpy(szLicenseKey, licenseKey.c_str());
-    // number of cassettes
-    cassetteNumber = info[2].ToNumber();
 
-    return Napi::String::New(env, CDU_Init(szPortName, szLicenseKey, cassetteNumber));
+
+    return mapToNapiObject(CDUVerifyLicenseKey(szLicenseKey), env);
 }
 
-Napi::String BillDispenserStatus(const Napi::CallbackInfo &info) {
+Napi::Object CDUResetV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    char szPortName[128];
-    // serial port name
-    std::string serialPortName = (std::string)info[0].ToString();
-    strcpy(szPortName, serialPortName.c_str());
+    int resetMode = info[0].ToNumber();
 
-    return Napi::String::New(env, CDU_Status(szPortName));
+    return mapToNapiObject(CDUReset(resetMode), env);
 }
 
-Napi::String BillDispenserDispense(const Napi::CallbackInfo &info) {
+Napi::Object CDUSetCassetteNumberV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    
+
+    int cassetteNumber = info[0].ToNumber();
+
+    return mapToNapiObject(CDUSetCassetteNumber(cassetteNumber), env);
+}
+
+Napi::Object CDUDispenseV2(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
     int numberNotesCassetteOne = info[0].ToNumber();
     int numberNotesCassetteTwo = info[1].ToNumber();
 
-    return Napi::String::New(env, CDU_Dispense(numberNotesCassetteOne, numberNotesCassetteTwo));
+    return mapToNapiObject(CDUDispense(numberNotesCassetteOne, numberNotesCassetteTwo), env);
+}
+
+Napi::Object CDUPresentV2(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(CDUPresent(), env);
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
@@ -234,9 +213,15 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "BAUReturnBillV2"), Napi::Function::New(env, BAUReturnBillV2));
     exports.Set(Napi::String::New(env, "BAUStackBillV2"), Napi::Function::New(env, BAUStackBillV2));
     exports.Set(Napi::String::New(env, "BAUGetSupportCurrencyV2"), Napi::Function::New(env, BAUGetSupportCurrencyV2));
-    exports.Set(Napi::String::New(env, "BillDispenserInit"), Napi::Function::New(env, BillDispenserInit));
-    exports.Set(Napi::String::New(env, "BillDispenserStatus"), Napi::Function::New(env, BillDispenserStatus));
-    exports.Set(Napi::String::New(env, "BillDispenserDispense"), Napi::Function::New(env, BillDispenserDispense));
+    exports.Set(Napi::String::New(env, "CDUGetLastErrorV2"), Napi::Function::New(env, CDUGetLastErrorV2));
+    exports.Set(Napi::String::New(env, "CDUOpenV2"), Napi::Function::New(env, CDUOpenV2));
+    exports.Set(Napi::String::New(env, "CDUCloseV2"), Napi::Function::New(env, CDUCloseV2));
+    exports.Set(Napi::String::New(env, "CDUStatusV2"), Napi::Function::New(env, CDUStatusV2));
+    exports.Set(Napi::String::New(env, "CDUVerifyLicenseKeyV2"), Napi::Function::New(env, CDUVerifyLicenseKeyV2));
+    exports.Set(Napi::String::New(env, "CDUResetV2"), Napi::Function::New(env, CDUResetV2));
+    exports.Set(Napi::String::New(env, "CDUSetCassetteNumberV2"), Napi::Function::New(env, CDUSetCassetteNumberV2));
+    exports.Set(Napi::String::New(env, "CDUDispenseV2"), Napi::Function::New(env, CDUDispenseV2));
+    exports.Set(Napi::String::New(env, "CDUPresentV2"), Napi::Function::New(env, CDUPresentV2));
 
     // return `exports` object
     return exports;
