@@ -6,99 +6,134 @@
 #include "genmegadevice/HmDeviceIF.h"
 #include "bill-dispenser.hpp"
 
-void CDUErrorHandler(int iRet, unsigned char *errmsg) {
+operationResult CDUGetLastError() {
+    unsigned char errmsg[6] = {0};
+    operationResult result;
+
     CDU_GetLastError(errmsg);
-    printf("\n DEBUG: CDU FAIL: %d\n", iRet);
-    printf(" DEBUG: DEVICE ERROR CODE: %s\n", errmsg);
-    CDU_Close();
+    result.data = std::string (reinterpret_cast<char const *>(errmsg));
+    return result;
 }
 
-std::string CDU_Status(char* serialPortName) {
-    unsigned char errmsg[6] = {0};
+operationResult CDUOpen(char* serialPortName) {
+    unsigned char szVerInfo[10];
     int iRet = 0;
-    unsigned char szVerInfo[15]={0};
+    operationResult result;
 
-	CDU_STATUS CduDisplayStatus;
+    iRet = CDU_Open(serialPortName, OUT szVerInfo);
 
-    std::string result = "";
-
-    // open device serial port
-    iRet = CDU_Open(serialPortName, szVerInfo);
-    if (iRet != HM_DEV_OK || HM_DEV_ALREADY_OPEN) {
-        CDUErrorHandler(iRet, errmsg);
-        return std::to_string(iRet);
-    }
-    iRet = CDU_Status(&CduDisplayStatus);
-    if(iRet == HM_DEV_OK) {
-        // TODO: push back all the information or simply try to return the struct and convert it into an object?
-        result.push_back(CduDisplayStatus.iLineStatus);
-        return result;
-    } else {
-        CDUErrorHandler(iRet, errmsg);
-        return "ERROR: " + std::to_string(iRet);
-    }
+    result.data = std::string (reinterpret_cast<char const *>(szVerInfo));
+    result.iRet = iRet;
+    return result;
 }
 
+operationResult CDUClose() {
+    operationResult result;
 
-std::string CDU_Dispense(int numberNotesCassetteOne, int numberNotesCassetteTwo) {
-    unsigned char errmsg[6] = {0};
+    CDU_Close();
+    result.data = "";
+    return result;
+}
+
+operationResult CDUStatus() {
+    int iRet = 0;
+    CDU_STATUS CduStatus;
+    operationResult result;
+
+    iRet = CDU_Status(&CduStatus);
+    result.iRet = iRet;
+    if(iRet == HM_DEV_OK) {
+        char iLineStatus = to_string(CduStatus.iLineStatus);
+        result.data.push_back(iLineStatus);
+        char iCstNum = to_string(CduStatus.iCstNum);
+        result.data.push_back(iCstNum);
+        char iDispenseType = to_string(CduStatus.iDispenseType);
+        result.data.push_back(iDispenseType);
+        char iJamStatus = to_string(CduStatus.iJamStatus);
+        result.data.push_back(iJamStatus);
+        char iCst1Status = to_string(CduStatus.iCst1Status);
+        result.data.push_back(iCst1Status);
+        char iCst2Status = to_string(CduStatus.iCst2Status);
+        result.data.push_back(iCst2Status);
+        char iCst3Status = to_string(CduStatus.iCst3Status);
+        result.data.push_back(iCst3Status);
+        char iCst4Status = to_string(CduStatus.iCst4Status);
+        result.data.push_back(iCst4Status);
+        char iCst5Status = to_string(CduStatus.iCst5Status);
+        result.data.push_back(iCst5Status);
+        char iCst6Status = to_string(CduStatus.iCst6Status);
+        result.data.push_back(iCst6Status);
+        char iShutterStatus = to_string(CduStatus.iShutterStatus);
+        result.data.push_back(iShutterStatus);
+        char iShutterRemain = to_string(CduStatus.iShutterRemain);
+        result.data.push_back(iShutterRemain);
+        char iStackerRemain = to_string(CduStatus.iStackerRemain);
+        result.data.push_back(iStackerRemain);
+        char iTransporterRemain = to_string(CduStatus.iTransporterRemain);
+        result.data.push_back(iTransporterRemain);
+    } else {
+        result.data = "";
+    }
+    return result;
+}
+
+operationResult CDUVerifyLicenseKey(char* licenseKey) {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = CDU_Verify_LicenseKey(licenseKey);
+    result.iRet = iRet;
+    result.data = "";
+
+    return result;
+}
+
+operationResult CDUReset(int resetMode) {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = CDU_Reset(resetMode);
+    result.iRet = iRet;
+    result.data = "";
+
+    return result;
+}
+
+operationResult CDUSetCassetteNumber(int cassetteNumber) {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = CDU_SetCassetteNum(cassetteNumber);
+    result.iRet = iRet;
+    result.data = "";
+
+    return result;
+}
+
+operationResult CDUDispense(int numberNotesCassetteOne, int numberNotesCassetteTwo) {
     int iRet = 0;
     int dispenseData[6] = {0};
-	DISPENSED_RESULT result[6];
-	CDU_STATUS CduDisplayStatus;
+	DISPENSED_RESULT dispensedResult[6];
+    operationResult result;
 
     dispenseData[0] = numberNotesCassetteOne;
     dispenseData[1] = numberNotesCassetteTwo;
 
-    iRet = CDU_Dispense(dispenseData, result);
-    if (iRet != HM_DEV_OK ) {
-        printf("CDU DISPENSE FAIL\n");
-        CDUErrorHandler(iRet, errmsg);
-        return "ERROR: " + std::to_string(iRet);
-    }
-    iRet = CDU_Status(&CduDisplayStatus);
-    if (iRet == HM_DEV_OK && CduDisplayStatus.iDispenseType == PRESENT_TYPE) {
-        iRet = CDU_Present();
-        if (iRet == HM_DEV_OK) {
-            CDU_Close();
-            return std::to_string(iRet);
-        }
-    }
-    CDUErrorHandler(iRet, errmsg);
-    return "ERROR: " + std::to_string(iRet);
+    iRet = CDU_Dispense(dispenseData, dispensedResult);
+    result.iRet = iRet;
+    //TODO: map dispensed result to data
+    result.data = "";
+
+    return result;
 }
 
-std::string CDU_Init(char* serialPortName, char* licenseKey, int cassetteNumber) {
-    unsigned char errmsg[6] = {0};
-    int iRet = 0, resetMode = 0;  // Reset mode(0: Normal, 1: Forced)
-    unsigned char szVerInfo[15]={0};
+operationResult CDUPresent() {
+    int iRet = 0;
+    operationResult result;
 
-    if(strlen(licenseKey) != 15) {
-        CDUErrorHandler(iRet, errmsg);
-        return "ERROR: " + std::to_string(HM_DEV_NOT_AUTHORIZED);
-    }
-    iRet = CDU_Verify_LicenseKey(licenseKey);
-    if (iRet != HM_DEV_OK) {
-        CDUErrorHandler(iRet, errmsg);
-        return "ERROR: " + std::to_string(iRet);
-    }
-    iRet = CDU_Open(serialPortName, OUT szVerInfo);
-    if(iRet != HM_DEV_OK ){
-        CDUErrorHandler(iRet, errmsg);
-        return "ERROR: " + std::to_string(iRet);
-	}
-    // Reject the notes to Reject Bin if the notes are on the feeding path
-    // Not checking whether Cassette loaded or not
-    // "... CDU_Reset(Forced) => ...retract notes(Forced reset command)."
-    iRet = CDU_Reset(resetMode);
-    if (iRet != HM_DEV_OK) {
-        CDUErrorHandler(iRet, errmsg);
-        return "ERROR: " + std::to_string(iRet);
-    }
-    iRet = CDU_SetCassetteNum(cassetteNumber);
-	if (iRet == HM_DEV_OK ) {
-        return std::to_string(iRet);
-    }
-    CDUErrorHandler(iRet, errmsg);
-    return "ERROR: " + std::to_string(iRet);
+    iRet = CDU_Present();
+    result.iRet = iRet;
+    result.data = "";
+
+    return result;
 }

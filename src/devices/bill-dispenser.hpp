@@ -1,8 +1,16 @@
+#include "result.hpp"
+
 #ifndef BILL_DISPENSER_HPP
 #define BILL_DISPENSER_HPP
 
-std::string CDU_Init(char* serialPortName, char* licenseKey, int cassetteNumber);
-std::string CDU_Status(char* serialPortName);
-std::string CDU_Dispense(int numberNotesCassetteOne, int numberNotesCassetteTwo);
+operationResult CDUGetLastError();
+operationResult CDUOpen(char* serialPortName);
+operationResult CDUClose();
+operationResult CDUStatus();
+operationResult CDUVerifyLicenseKey(char* licenseKey);
+operationResult CDUReset(int resetMode);
+operationResult CDUSetCassetteNumber(int cassetteNumber);
+operationResult CDUDispense(int numberNotesCassetteOne, int numberNotesCassetteTwo);
+operationResult CDUPresent();
 
 #endif
