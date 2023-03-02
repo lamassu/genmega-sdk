@@ -6,12 +6,14 @@
 #include "genmegadevice/HmDeviceIF.h"
 #include "bill-dispenser.hpp"
 
+using namespace std;
+
 operationResult CDUGetLastError() {
     unsigned char errmsg[6] = {0};
     operationResult result;
 
     CDU_GetLastError(errmsg);
-    result.data = std::string (reinterpret_cast<char const *>(errmsg));
+    result.data = string (reinterpret_cast<char const *>(errmsg));
     return result;
 }
 
@@ -22,7 +24,7 @@ operationResult CDUOpen(char* serialPortName) {
 
     iRet = CDU_Open(serialPortName, OUT szVerInfo);
 
-    result.data = std::string (reinterpret_cast<char const *>(szVerInfo));
+    result.data = string (reinterpret_cast<char const *>(szVerInfo));
     result.iRet = iRet;
     return result;
 }
@@ -43,34 +45,20 @@ operationResult CDUStatus() {
     iRet = CDU_Status(&CduStatus);
     result.iRet = iRet;
     if(iRet == HM_DEV_OK) {
-        char iLineStatus = to_string(CduStatus.iLineStatus);
-        result.data.push_back(iLineStatus);
-        char iCstNum = to_string(CduStatus.iCstNum);
-        result.data.push_back(iCstNum);
-        char iDispenseType = to_string(CduStatus.iDispenseType);
-        result.data.push_back(iDispenseType);
-        char iJamStatus = to_string(CduStatus.iJamStatus);
-        result.data.push_back(iJamStatus);
-        char iCst1Status = to_string(CduStatus.iCst1Status);
-        result.data.push_back(iCst1Status);
-        char iCst2Status = to_string(CduStatus.iCst2Status);
-        result.data.push_back(iCst2Status);
-        char iCst3Status = to_string(CduStatus.iCst3Status);
-        result.data.push_back(iCst3Status);
-        char iCst4Status = to_string(CduStatus.iCst4Status);
-        result.data.push_back(iCst4Status);
-        char iCst5Status = to_string(CduStatus.iCst5Status);
-        result.data.push_back(iCst5Status);
-        char iCst6Status = to_string(CduStatus.iCst6Status);
-        result.data.push_back(iCst6Status);
-        char iShutterStatus = to_string(CduStatus.iShutterStatus);
-        result.data.push_back(iShutterStatus);
-        char iShutterRemain = to_string(CduStatus.iShutterRemain);
-        result.data.push_back(iShutterRemain);
-        char iStackerRemain = to_string(CduStatus.iStackerRemain);
-        result.data.push_back(iStackerRemain);
-        char iTransporterRemain = to_string(CduStatus.iTransporterRemain);
-        result.data.push_back(iTransporterRemain);
+        result.data + to_string(CduStatus.iLineStatus);
+        result.data + to_string(CduStatus.iCstNum);
+        result.data + to_string(CduStatus.iDispenseType);
+        result.data + to_string(CduStatus.iJamStatus);
+        result.data + to_string(CduStatus.iCst1Status);
+        result.data + to_string(CduStatus.iCst2Status);
+        result.data + to_string(CduStatus.iCst3Status);
+        result.data + to_string(CduStatus.iCst4Status);
+        result.data + to_string(CduStatus.iCst5Status);
+        result.data + to_string(CduStatus.iCst6Status);
+        result.data + to_string(CduStatus.iShutterStatus);
+        result.data + to_string(CduStatus.iShutterRemain);
+        result.data + to_string(CduStatus.iStackerRemain);
+        result.data + to_string(CduStatus.iTransporterRemain);
     } else {
         result.data = "";
     }
@@ -110,6 +98,20 @@ operationResult CDUSetCassetteNumber(int cassetteNumber) {
     return result;
 }
 
+string mapDispensedResultToString(DISPENSED_RESULT dispensed) {
+    string result = "";
+    result + to_string(dispensed.iDispensedCount);
+    result + to_string(dispensed.iRejectedCount);
+    result + to_string(dispensed.iPassedCount);
+    result + to_string(dispensed.iSkewCount);
+    result + to_string(dispensed.iAbnormalSpaceCount);
+    result + to_string(dispensed.iLongCount);
+    result + to_string(dispensed.iShortCount);
+    result + to_string(dispensed.iDoubleNoteCount);
+    result + to_string(dispensed.iHalfSizeCount);
+    return result;
+}
+
 operationResult CDUDispense(int numberNotesCassetteOne, int numberNotesCassetteTwo) {
     int iRet = 0;
     int dispenseData[6] = {0};
@@ -121,8 +123,10 @@ operationResult CDUDispense(int numberNotesCassetteOne, int numberNotesCassetteT
 
     iRet = CDU_Dispense(dispenseData, dispensedResult);
     result.iRet = iRet;
-    //TODO: map dispensed result to data
-    result.data = "";
+    
+    result.data + mapDispensedResultToString(dispensedResult[0]);
+    result.data + ";";
+    result.data + mapDispensedResultToString(dispensedResult[1]);
 
     return result;
 }
@@ -132,6 +136,28 @@ operationResult CDUPresent() {
     operationResult result;
 
     iRet = CDU_Present();
+    result.iRet = iRet;
+    result.data = "";
+
+    return result;
+}
+
+operationResult CDUForceEject() {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = CDU_ForceEject();
+    result.iRet = iRet;
+    result.data = "";
+
+    return result;
+}
+
+operationResult CDUShutterAction(int action) {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = CDU_ShutterAction(action);
     result.iRet = iRet;
     result.data = "";
 

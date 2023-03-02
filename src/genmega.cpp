@@ -198,6 +198,20 @@ Napi::Object CDUPresentV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(CDUPresent(), env);
 }
 
+Napi::Object CDUForceEjectV2(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(CDUForceEject(), env);
+}
+
+Napi::Object CDUShutterActionV2(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    int action = info[0].ToNumber();
+
+    return mapToNapiObject(CDUShutterAction(action), env);
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
     exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
@@ -222,6 +236,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "CDUSetCassetteNumberV2"), Napi::Function::New(env, CDUSetCassetteNumberV2));
     exports.Set(Napi::String::New(env, "CDUDispenseV2"), Napi::Function::New(env, CDUDispenseV2));
     exports.Set(Napi::String::New(env, "CDUPresentV2"), Napi::Function::New(env, CDUPresentV2));
+    exports.Set(Napi::String::New(env, "CDUForceEjectV2"), Napi::Function::New(env, CDUForceEjectV2));
+    exports.Set(Napi::String::New(env, "CDUShutterActionV2"), Napi::Function::New(env, CDUShutterActionV2));
 
     // return `exports` object
     return exports;
