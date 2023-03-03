@@ -31,9 +31,7 @@ operationResult CDUOpen(char* serialPortName) {
 
 operationResult CDUClose() {
     operationResult result;
-
     CDU_Close();
-    result.data = "";
     return result;
 }
 
@@ -71,7 +69,6 @@ operationResult CDUVerifyLicenseKey(char* licenseKey) {
 
     iRet = CDU_Verify_LicenseKey(licenseKey);
     result.iRet = iRet;
-    result.data = "";
 
     return result;
 }
@@ -82,7 +79,6 @@ operationResult CDUReset(int resetMode) {
 
     iRet = CDU_Reset(resetMode);
     result.iRet = iRet;
-    result.data = "";
 
     return result;
 }
@@ -93,7 +89,6 @@ operationResult CDUSetCassetteNumber(int cassetteNumber) {
 
     iRet = CDU_SetCassetteNum(cassetteNumber);
     result.iRet = iRet;
-    result.data = "";
 
     return result;
 }
@@ -112,22 +107,21 @@ string mapDispensedResultToString(DISPENSED_RESULT dispensed) {
     return result;
 }
 
-operationResult CDUDispense(int numberNotesCassetteOne, int numberNotesCassetteTwo) {
+operationResult CDUDispense(int* dispenseData, int numberOfCassettesEnabled) {
     int iRet = 0;
-    int dispenseData[6] = {0};
 	DISPENSED_RESULT dispensedResult[6];
     operationResult result;
 
-    dispenseData[0] = numberNotesCassetteOne;
-    dispenseData[1] = numberNotesCassetteTwo;
-
     iRet = CDU_Dispense(dispenseData, dispensedResult);
     result.iRet = iRet;
-    
-    result.data + mapDispensedResultToString(dispensedResult[0]);
-    result.data + ";";
-    result.data + mapDispensedResultToString(dispensedResult[1]);
 
+    for(int i = 0; i < numberOfCassettesEnabled; i++) {
+        result.data + mapDispensedResultToString(dispensedResult[i]);
+        if ((i+1) < numberOfCassettesEnabled) {
+            result.data + ";";
+        }
+    }
+    
     return result;
 }
 
@@ -137,7 +131,6 @@ operationResult CDUPresent() {
 
     iRet = CDU_Present();
     result.iRet = iRet;
-    result.data = "";
 
     return result;
 }
@@ -148,7 +141,6 @@ operationResult CDUForceEject() {
 
     iRet = CDU_ForceEject();
     result.iRet = iRet;
-    result.data = "";
 
     return result;
 }
@@ -159,7 +151,6 @@ operationResult CDUShutterAction(int action) {
 
     iRet = CDU_ShutterAction(action);
     result.iRet = iRet;
-    result.data = "";
 
     return result;
 }

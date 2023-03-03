@@ -124,13 +124,13 @@ Napi::Object BAUGetSupportCurrencyV2(const Napi::CallbackInfo &info) {
 
 // CDU new v2
 
-Napi::Object CDUGetLastErrorV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUGetLastError(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return mapToNapiObject(CDUGetLastError(), env);
 }
 
-Napi::Object CDUOpenV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUOpen(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     char szPortName[128];
@@ -142,19 +142,19 @@ Napi::Object CDUOpenV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(CDUOpen(szPortName), env);
 }
 
-Napi::Object CDUCloseV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUClose(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return mapToNapiObject(CDUClose(), env);
 }
 
-Napi::Object CDUStatusV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUStatus(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return mapToNapiObject(CDUStatus(), env); 
 }
 
-Napi::Object CDUVerifyLicenseKeyV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUVerifyLicenseKey(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     char szLicenseKey[20]={0};
@@ -167,7 +167,7 @@ Napi::Object CDUVerifyLicenseKeyV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(CDUVerifyLicenseKey(szLicenseKey), env);
 }
 
-Napi::Object CDUResetV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUReset(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     int resetMode = info[0].ToNumber();
@@ -175,7 +175,7 @@ Napi::Object CDUResetV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(CDUReset(resetMode), env);
 }
 
-Napi::Object CDUSetCassetteNumberV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUSetCassetteNumber(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     int cassetteNumber = info[0].ToNumber();
@@ -183,28 +183,35 @@ Napi::Object CDUSetCassetteNumberV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(CDUSetCassetteNumber(cassetteNumber), env);
 }
 
-Napi::Object CDUDispenseV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUDispense(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    int numberNotesCassetteOne = info[0].ToNumber();
-    int numberNotesCassetteTwo = info[1].ToNumber();
+    int dispenseCount[6] = {0};
 
-    return mapToNapiObject(CDUDispense(numberNotesCassetteOne, numberNotesCassetteTwo), env);
+    Napi::Array dispenseCountArray = info[0].As<Napi::Array>();
+    int len = dispenseCountArray.Length();
+    for (int i = 0; i < len; i++) {
+        dispenseCount[i] = dispenseCountArray.Get(i).ToNumber();
+    }
+
+    int numberOfCassettesEnabled = info[1].ToNumber();
+
+    return mapToNapiObject(CDUDispense(dispenseCount, numberOfCassettesEnabled), env);
 }
 
-Napi::Object CDUPresentV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUPresent(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return mapToNapiObject(CDUPresent(), env);
 }
 
-Napi::Object CDUForceEjectV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUForceEject(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return mapToNapiObject(CDUForceEject(), env);
 }
 
-Napi::Object CDUShutterActionV2(const Napi::CallbackInfo &info) {
+Napi::Object _CDUShutterAction(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     int action = info[0].ToNumber();
@@ -227,17 +234,17 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "BAUReturnBillV2"), Napi::Function::New(env, BAUReturnBillV2));
     exports.Set(Napi::String::New(env, "BAUStackBillV2"), Napi::Function::New(env, BAUStackBillV2));
     exports.Set(Napi::String::New(env, "BAUGetSupportCurrencyV2"), Napi::Function::New(env, BAUGetSupportCurrencyV2));
-    exports.Set(Napi::String::New(env, "CDUGetLastErrorV2"), Napi::Function::New(env, CDUGetLastErrorV2));
-    exports.Set(Napi::String::New(env, "CDUOpenV2"), Napi::Function::New(env, CDUOpenV2));
-    exports.Set(Napi::String::New(env, "CDUCloseV2"), Napi::Function::New(env, CDUCloseV2));
-    exports.Set(Napi::String::New(env, "CDUStatusV2"), Napi::Function::New(env, CDUStatusV2));
-    exports.Set(Napi::String::New(env, "CDUVerifyLicenseKeyV2"), Napi::Function::New(env, CDUVerifyLicenseKeyV2));
-    exports.Set(Napi::String::New(env, "CDUResetV2"), Napi::Function::New(env, CDUResetV2));
-    exports.Set(Napi::String::New(env, "CDUSetCassetteNumberV2"), Napi::Function::New(env, CDUSetCassetteNumberV2));
-    exports.Set(Napi::String::New(env, "CDUDispenseV2"), Napi::Function::New(env, CDUDispenseV2));
-    exports.Set(Napi::String::New(env, "CDUPresentV2"), Napi::Function::New(env, CDUPresentV2));
-    exports.Set(Napi::String::New(env, "CDUForceEjectV2"), Napi::Function::New(env, CDUForceEjectV2));
-    exports.Set(Napi::String::New(env, "CDUShutterActionV2"), Napi::Function::New(env, CDUShutterActionV2));
+    exports.Set(Napi::String::New(env, "_CDUGetLastError"), Napi::Function::New(env, _CDUGetLastError));
+    exports.Set(Napi::String::New(env, "_CDUOpen"), Napi::Function::New(env, _CDUOpen));
+    exports.Set(Napi::String::New(env, "_CDUClose"), Napi::Function::New(env, _CDUClose));
+    exports.Set(Napi::String::New(env, "_CDUStatus"), Napi::Function::New(env, _CDUStatus));
+    exports.Set(Napi::String::New(env, "_CDUVerifyLicenseKey"), Napi::Function::New(env, _CDUVerifyLicenseKey));
+    exports.Set(Napi::String::New(env, "_CDUReset"), Napi::Function::New(env, _CDUReset));
+    exports.Set(Napi::String::New(env, "_CDUSetCassetteNumber"), Napi::Function::New(env, _CDUSetCassetteNumber));
+    exports.Set(Napi::String::New(env, "_CDUDispense"), Napi::Function::New(env, _CDUDispense));
+    exports.Set(Napi::String::New(env, "_CDUPresent"), Napi::Function::New(env, _CDUPresent));
+    exports.Set(Napi::String::New(env, "_CDUForceEject"), Napi::Function::New(env, _CDUForceEject));
+    exports.Set(Napi::String::New(env, "_CDUShutterAction"), Napi::Function::New(env, _CDUShutterAction));
 
     // return `exports` object
     return exports;

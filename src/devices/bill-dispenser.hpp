@@ -10,7 +10,9 @@ operationResult CDUStatus();
 operationResult CDUVerifyLicenseKey(char* licenseKey);
 operationResult CDUReset(int resetMode);
 operationResult CDUSetCassetteNumber(int cassetteNumber);
-operationResult CDUDispense(int numberNotesCassetteOne, int numberNotesCassetteTwo);
+operationResult CDUDispense(int* dispenseCount, int numberOfCassettesEnabled);
 operationResult CDUPresent();
+operationResult CDUForceEject();
+operationResult CDUShutterAction(int action);
 
 #endif
