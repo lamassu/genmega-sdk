@@ -6,6 +6,7 @@
 #include "devices/barcode-scanner.hpp"
 #include "devices/bill-validator.hpp"
 #include "devices/bill-dispenser.hpp"
+#include "devices/printer.hpp"
 #include "devices/result.hpp"
 
 
@@ -260,7 +261,7 @@ Napi::Object _RPUCutPaper(const Napi::CallbackInfo &info) {
 Napi::Object _RPUPrintText(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    char textContent[];
+    char textContent[4096] = {0}; // what size should it be?
 
     // text to be printed
     std::string text = (std::string)info[0].ToString();
