@@ -8,7 +8,7 @@
 using namespace std;
 
 operationResult RPUGetLastError() {
-    unsigned char errmsg[6] = {0};
+    char errmsg[6] = {0};
     operationResult result;
 
     RPU_GetLastError(errmsg);
@@ -17,11 +17,11 @@ operationResult RPUGetLastError() {
 }
 
 operationResult RPUOpen(char* serialPortName) {
-    unsigned char szVerInfo[10];
+    char szVerInfo[10] = {0};
     int iRet = 0;
     operationResult result;
 
-    iRet = RPU_Open(serialPortName, OUR szVerInfo);
+    iRet = RPU_Open(serialPortName, OUT szVerInfo);
 
     result.data = string (reinterpret_cast<char const *>(szVerInfo));
     result.iRet = iRet;
@@ -42,21 +42,21 @@ operationResult RPUStatus () {
     iRet = RPU_Status(&RpuStatus);
     result.iRet = iRet;
     if(iRet == HM_DEV_OK) {
-        const lineStatus = RpuStatus.LineStatus ? '1' : '0';
+        char lineStatus = RpuStatus.LineStatus ? '1' : '0';
         result.data.push_back(lineStatus);
-        const paperLoad = RpuStatus.PaperLoad ? '1' : '0';
+        char paperLoad = RpuStatus.PaperLoad ? '1' : '0';
         result.data.push_back(paperLoad);
-        const paperTphLoad = RpuStatus.PaperTphLoad ? '1' : '0';
+        char paperTphLoad = RpuStatus.PaperTphLoad ? '1' : '0';
         result.data.push_back(paperTphLoad);
-        const paperNearEnd = RpuStatus.PaperNearEnd ? '1' : '0';
+        char paperNearEnd = RpuStatus.PaperNearEnd ? '1' : '0';
         result.data.push_back(paperNearEnd);
-        const tphLever = RpuStatus.TphLever ? '1' : '0';
+        char tphLever = RpuStatus.TphLever ? '1' : '0';
         result.data.push_back(tphLever);
-        const paperJam = RpuStatus.PaperJam ? '1' : '0';
+        char paperJam = RpuStatus.PaperJam ? '1' : '0';
         result.data.push_back(paperJam);
-        const cutterHome = RpuStatus.CutterHome ? '1' : '0';
+        char cutterHome = RpuStatus.CutterHome ? '1' : '0';
         result.data.push_back(cutterHome);
-        const paperNormal = RpuStatus.PaperNormal ? '1' : '0';
+        char paperNormal = RpuStatus.PaperNormal ? '1' : '0';
         result.data.push_back(paperNormal);
     } else {
         result.data = "";
