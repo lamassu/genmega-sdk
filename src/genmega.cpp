@@ -7,6 +7,7 @@
 #include "devices/bill-validator.hpp"
 #include "devices/bill-dispenser.hpp"
 #include "devices/printer.hpp"
+#include "devices/leds.hpp"
 #include "devices/result.hpp"
 
 
@@ -270,6 +271,41 @@ Napi::Object _RPUPrintText(const Napi::CallbackInfo &info) {
     return mapToNapiObject(RPUPrintText(textContent), env); 
 }
 
+// SIU
+
+Napi::Object _SIUOpen(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    char szPortName[128];
+    // serial port name
+    std::string serialPortName = (std::string)info[0].ToString();
+    strcpy(szPortName, serialPortName.c_str());
+
+    return mapToNapiObject(SIUOpen(szPortName), env);
+}
+
+Napi::Object _SIUFlicker(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    int actionType = info[1].ToNumber();
+    int device = info[2].ToNumber();
+
+    return mapToNapiObject(SIUFlicker(device, actionType), env);
+}
+
+Napi::Object _SIUClose(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(SIUClose(), env);
+}
+
+Napi::Object _SIUReset(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(SIUReset(), env);
+}
+
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
     exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
@@ -302,7 +338,10 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "_RPUStatus"), Napi::Function::New(env, _RPUStatus));
     exports.Set(Napi::String::New(env, "_RPUCutPaper"), Napi::Function::New(env, _RPUCutPaper));
     exports.Set(Napi::String::New(env, "_RPUPrintText"), Napi::Function::New(env, _RPUPrintText));
-    
+    exports.Set(Napi::String::New(env, "_SIUOpen"), Napi::Function::New(env, _SIUOpen));
+    exports.Set(Napi::String::New(env, "_SIUFlicker"), Napi::Function::New(env, _SIUFlicker));
+    exports.Set(Napi::String::New(env, "_SIUClose"), Napi::Function::New(env, _SIUClose));
+    exports.Set(Napi::String::New(env, "_SIUReset"), Napi::Function::New(env, _SIUReset));
 
     // return `exports` object
     return exports;
