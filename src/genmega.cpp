@@ -287,8 +287,8 @@ Napi::Object _SIUOpen(const Napi::CallbackInfo &info) {
 Napi::Object _SIUFlicker(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
+    int device = info[0].ToNumber();
     int actionType = info[1].ToNumber();
-    int device = info[2].ToNumber();
 
     return mapToNapiObject(SIUFlicker(device, actionType), env);
 }
