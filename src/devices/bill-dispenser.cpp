@@ -18,7 +18,7 @@ operationResult CDUGetLastError() {
 }
 
 operationResult CDUOpen(char* serialPortName) {
-    unsigned char szVerInfo[10];
+    unsigned char szVerInfo[15] = {0};
     int iRet = 0;
     operationResult result;
 
@@ -43,20 +43,20 @@ operationResult CDUStatus() {
     iRet = CDU_Status(&CduStatus);
     result.iRet = iRet;
     if(iRet == HM_DEV_OK) {
-        result.data + to_string(CduStatus.iLineStatus);
-        result.data + to_string(CduStatus.iCstNum);
-        result.data + to_string(CduStatus.iDispenseType);
-        result.data + to_string(CduStatus.iJamStatus);
-        result.data + to_string(CduStatus.iCst1Status);
-        result.data + to_string(CduStatus.iCst2Status);
-        result.data + to_string(CduStatus.iCst3Status);
-        result.data + to_string(CduStatus.iCst4Status);
-        result.data + to_string(CduStatus.iCst5Status);
-        result.data + to_string(CduStatus.iCst6Status);
-        result.data + to_string(CduStatus.iShutterStatus);
-        result.data + to_string(CduStatus.iShutterRemain);
-        result.data + to_string(CduStatus.iStackerRemain);
-        result.data + to_string(CduStatus.iTransporterRemain);
+        result.data = to_string(CduStatus.iLineStatus)
+            + to_string(CduStatus.iCstNum)
+            + to_string(CduStatus.iDispenseType)
+            + to_string(CduStatus.iJamStatus)
+            + to_string(CduStatus.iCst1Status)
+            + to_string(CduStatus.iCst2Status)
+            + to_string(CduStatus.iCst3Status)
+            + to_string(CduStatus.iCst4Status)
+            + to_string(CduStatus.iCst5Status)
+            + to_string(CduStatus.iCst6Status)
+            + to_string(CduStatus.iShutterStatus)
+            + to_string(CduStatus.iShutterRemain)
+            + to_string(CduStatus.iStackerRemain)
+            + to_string(CduStatus.iTransporterRemain);
     } else {
         result.data = "";
     }
@@ -95,15 +95,15 @@ operationResult CDUSetCassetteNumber(int cassetteNumber) {
 
 string mapDispensedResultToString(DISPENSED_RESULT dispensed) {
     string result = "";
-    result + to_string(dispensed.iDispensedCount);
-    result + to_string(dispensed.iRejectedCount);
-    result + to_string(dispensed.iPassedCount);
-    result + to_string(dispensed.iSkewCount);
-    result + to_string(dispensed.iAbnormalSpaceCount);
-    result + to_string(dispensed.iLongCount);
-    result + to_string(dispensed.iShortCount);
-    result + to_string(dispensed.iDoubleNoteCount);
-    result + to_string(dispensed.iHalfSizeCount);
+    result = to_string(dispensed.iDispensedCount)
+        + to_string(dispensed.iRejectedCount)
+        + to_string(dispensed.iPassedCount)
+        + to_string(dispensed.iSkewCount)
+        + to_string(dispensed.iAbnormalSpaceCount)
+        + to_string(dispensed.iLongCount)
+        + to_string(dispensed.iShortCount)
+        + to_string(dispensed.iDoubleNoteCount)
+        + to_string(dispensed.iHalfSizeCount);
     return result;
 }
 
@@ -116,9 +116,9 @@ operationResult CDUDispense(int* dispenseData, int numberOfCassettesEnabled) {
     result.iRet = iRet;
 
     for(int i = 0; i < numberOfCassettesEnabled; i++) {
-        result.data + mapDispensedResultToString(dispensedResult[i]);
+        result.data += mapDispensedResultToString(dispensedResult[i]);
         if ((i+1) < numberOfCassettesEnabled) {
-            result.data + ";";
+            result.data += ";";
         }
     }
     

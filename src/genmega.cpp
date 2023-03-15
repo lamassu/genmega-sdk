@@ -133,7 +133,7 @@ Napi::Object _CDUGetLastError(const Napi::CallbackInfo &info) {
 Napi::Object _CDUOpen(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    char szPortName[128];
+    char szPortName[128] = {0};
 
     // serial port name
     std::string serialPortName = (std::string)info[0].ToString();
@@ -157,10 +157,10 @@ Napi::Object _CDUStatus(const Napi::CallbackInfo &info) {
 Napi::Object _CDUVerifyLicenseKey(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    char szLicenseKey[20]={0};
+    char szLicenseKey[16] = {0};
 
     // CDU license key
-    std::string licenseKey = (std::string)info[1].ToString();
+    std::string licenseKey = (std::string)info[0].ToString();
     strcpy(szLicenseKey, licenseKey.c_str());
 
 
