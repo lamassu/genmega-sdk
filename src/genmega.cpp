@@ -261,11 +261,14 @@ Napi::Object _RPUCutPaper(const Napi::CallbackInfo &info) {
 Napi::Object _RPUPrintText(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    char textContent[4096] = {0}; // what size should it be?
+    Napi::Buffer<char> buffer = info[0].As<Napi::Buffer<char>>();
+    char* data = buffer.Data();
+    const size_t length = buffer.Length();
+    char textContent[length];
 
-    // text to be printed
-    std::string text = (std::string)info[0].ToString();
-    strcpy(textContent, text.c_str());
+    for(size_t i = 0; i < length; i++) {
+        textContent[i] = data[i];
+    }
 
     return mapToNapiObject(RPUPrintText(textContent), env); 
 }
