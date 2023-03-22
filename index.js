@@ -1,5 +1,6 @@
 const genmega = require('./build/Release/genmega.node')
 const bau = require('./bau')
+const cdu = require('./cdu')
 
 exports.BarcodeScan = genmega.BarcodeScan
 exports.BarcodeCancelScan = genmega.BarcodeCancelScan
@@ -14,3 +15,14 @@ exports.BAUCancel = bau.BAUCancel
 exports.BAUReject = bau.BAUReject
 exports.BAUStack = bau.BAUStack
 exports.BAUGetSupportCurrency = bau.BAUGetSupportCurrency
+exports.CDUGetLastError = cdu.CDUGetLastError
+exports.CDUOpen = cdu.CDUOpen
+exports.CDUClose = cdu.CDUClose
+exports.CDUStatus = cdu.CDUStatus
+exports.CDUVerifyLicenseKey = cdu.CDUVerifyLicenseKey
+exports.CDUReset = cdu.CDUReset
+exports.CDUSetCassetteNumber = cdu.CDUSetCassetteNumber
+exports.CDUDispense = cdu.CDUDispense
+exports.CDUPresent = cdu.CDUPresent
+exports.CDUForceEject = cdu.CDUForceEject
+exports.CDUShutterAction = cdu.CDUShutterAction

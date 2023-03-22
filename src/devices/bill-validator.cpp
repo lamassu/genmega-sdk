@@ -20,7 +20,7 @@ operationResult BAUOpen(char* serialPortName) {
     operationResult result;
 
     iRet = BAU_Open(serialPortName, OUT szVerInfo);
-   
+
     result.data = std::string (reinterpret_cast<char const *>(szVerInfo));
     result.iRet = iRet;
     return result;
@@ -150,9 +150,4 @@ operationResult BAUGetSupportCurrency() {
     result.data = szDenomData;
     return result;
 }
-
-
-
-
-
 

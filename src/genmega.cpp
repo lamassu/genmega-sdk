@@ -5,6 +5,7 @@
 
 #include "devices/barcode-scanner.hpp"
 #include "devices/bill-validator.hpp"
+#include "devices/bill-dispenser.hpp"
 #include "devices/result.hpp"
 
 
@@ -121,6 +122,103 @@ Napi::Object BAUGetSupportCurrencyV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(BAUGetSupportCurrency(), env);
 }
 
+// CDU new v2
+
+Napi::Object _CDUGetLastError(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(CDUGetLastError(), env);
+}
+
+Napi::Object _CDUOpen(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    char szPortName[128] = {0};
+
+    // serial port name
+    std::string serialPortName = (std::string)info[0].ToString();
+    strcpy(szPortName, serialPortName.c_str());
+
+    return mapToNapiObject(CDUOpen(szPortName), env);
+}
+
+Napi::Object _CDUClose(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(CDUClose(), env);
+}
+
+Napi::Object _CDUStatus(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(CDUStatus(), env); 
+}
+
+Napi::Object _CDUVerifyLicenseKey(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    char szLicenseKey[16] = {0};
+
+    // CDU license key
+    std::string licenseKey = (std::string)info[0].ToString();
+    strcpy(szLicenseKey, licenseKey.c_str());
+
+
+    return mapToNapiObject(CDUVerifyLicenseKey(szLicenseKey), env);
+}
+
+Napi::Object _CDUReset(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    int resetMode = info[0].ToNumber();
+
+    return mapToNapiObject(CDUReset(resetMode), env);
+}
+
+Napi::Object _CDUSetCassetteNumber(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    int cassetteNumber = info[0].ToNumber();
+
+    return mapToNapiObject(CDUSetCassetteNumber(cassetteNumber), env);
+}
+
+Napi::Object _CDUDispense(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    int dispenseCount[6] = {0};
+
+    Napi::Array dispenseCountArray = info[0].As<Napi::Array>();
+    int len = dispenseCountArray.Length();
+    for (int i = 0; i < len; i++) {
+        dispenseCount[i] = dispenseCountArray.Get(i).ToNumber();
+    }
+
+    int numberOfCassettesEnabled = info[1].ToNumber();
+
+    return mapToNapiObject(CDUDispense(dispenseCount, numberOfCassettesEnabled), env);
+}
+
+Napi::Object _CDUPresent(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(CDUPresent(), env);
+}
+
+Napi::Object _CDUForceEject(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(CDUForceEject(), env);
+}
+
+Napi::Object _CDUShutterAction(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    int action = info[0].ToNumber();
+
+    return mapToNapiObject(CDUShutterAction(action), env);
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
     exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
@@ -136,6 +234,17 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "BAUReturnBillV2"), Napi::Function::New(env, BAUReturnBillV2));
     exports.Set(Napi::String::New(env, "BAUStackBillV2"), Napi::Function::New(env, BAUStackBillV2));
     exports.Set(Napi::String::New(env, "BAUGetSupportCurrencyV2"), Napi::Function::New(env, BAUGetSupportCurrencyV2));
+    exports.Set(Napi::String::New(env, "_CDUGetLastError"), Napi::Function::New(env, _CDUGetLastError));
+    exports.Set(Napi::String::New(env, "_CDUOpen"), Napi::Function::New(env, _CDUOpen));
+    exports.Set(Napi::String::New(env, "_CDUClose"), Napi::Function::New(env, _CDUClose));
+    exports.Set(Napi::String::New(env, "_CDUStatus"), Napi::Function::New(env, _CDUStatus));
+    exports.Set(Napi::String::New(env, "_CDUVerifyLicenseKey"), Napi::Function::New(env, _CDUVerifyLicenseKey));
+    exports.Set(Napi::String::New(env, "_CDUReset"), Napi::Function::New(env, _CDUReset));
+    exports.Set(Napi::String::New(env, "_CDUSetCassetteNumber"), Napi::Function::New(env, _CDUSetCassetteNumber));
+    exports.Set(Napi::String::New(env, "_CDUDispense"), Napi::Function::New(env, _CDUDispense));
+    exports.Set(Napi::String::New(env, "_CDUPresent"), Napi::Function::New(env, _CDUPresent));
+    exports.Set(Napi::String::New(env, "_CDUForceEject"), Napi::Function::New(env, _CDUForceEject));
+    exports.Set(Napi::String::New(env, "_CDUShutterAction"), Napi::Function::New(env, _CDUShutterAction));
 
     // return `exports` object
     return exports;
