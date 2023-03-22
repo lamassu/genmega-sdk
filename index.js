@@ -1,6 +1,7 @@
 const genmega = require('./build/Release/genmega.node')
 const bau = require('./bau')
 const cdu = require('./cdu')
+const rpu = require('./rpu')
 
 exports.BarcodeScan = genmega.BarcodeScan
 exports.BarcodeCancelScan = genmega.BarcodeCancelScan
@@ -26,3 +27,10 @@ exports.CDUDispense = cdu.CDUDispense
 exports.CDUPresent = cdu.CDUPresent
 exports.CDUForceEject = cdu.CDUForceEject
 exports.CDUShutterAction = cdu.CDUShutterAction
+exports.RPUGetLastError = rpu.RPUGetLastError
+exports.RPUOpen = rpu.RPUOpen
+exports.RPUClose = rpu.RPUClose
+exports.RPUStatus = rpu.RPUStatus
+exports.RPUCutPaper = rpu.RPUCutPaper
+exports.RPUPrintText = rpu.RPUPrintText
+

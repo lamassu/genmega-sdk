@@ -6,6 +6,7 @@
 #include "devices/barcode-scanner.hpp"
 #include "devices/bill-validator.hpp"
 #include "devices/bill-dispenser.hpp"
+#include "devices/printer.hpp"
 #include "devices/result.hpp"
 
 
@@ -219,6 +220,59 @@ Napi::Object _CDUShutterAction(const Napi::CallbackInfo &info) {
     return mapToNapiObject(CDUShutterAction(action), env);
 }
 
+// RPU
+
+Napi::Object _RPUGetLastError(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    
+    return mapToNapiObject(RPUGetLastError(), env);
+}
+
+Napi::Object _RPUOpen(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    char szPortName[128];
+
+    // serial port name
+    std::string serialPortName = (std::string)info[0].ToString();
+    strcpy(szPortName, serialPortName.c_str());
+
+    return mapToNapiObject(RPUOpen(szPortName), env);
+}
+
+Napi::Object _RPUClose(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(RPUClose(), env);
+}
+
+Napi::Object _RPUStatus(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(RPUStatus(), env); 
+}
+
+Napi::Object _RPUCutPaper(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    return mapToNapiObject(RPUCutPaper(), env); 
+}
+
+Napi::Object _RPUPrintText(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+
+    Napi::Buffer<char> buffer = info[0].As<Napi::Buffer<char>>();
+    char* data = buffer.Data();
+    const size_t length = buffer.Length();
+    char textContent[length];
+
+    for(size_t i = 0; i < length; i++) {
+        textContent[i] = data[i];
+    }
+
+    return mapToNapiObject(RPUPrintText(textContent), env); 
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
     exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
@@ -245,6 +299,13 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "_CDUPresent"), Napi::Function::New(env, _CDUPresent));
     exports.Set(Napi::String::New(env, "_CDUForceEject"), Napi::Function::New(env, _CDUForceEject));
     exports.Set(Napi::String::New(env, "_CDUShutterAction"), Napi::Function::New(env, _CDUShutterAction));
+    exports.Set(Napi::String::New(env, "_RPUGetLastError"), Napi::Function::New(env, _RPUGetLastError));
+    exports.Set(Napi::String::New(env, "_RPUOpen"), Napi::Function::New(env, _RPUOpen));
+    exports.Set(Napi::String::New(env, "_RPUClose"), Napi::Function::New(env, _RPUClose));
+    exports.Set(Napi::String::New(env, "_RPUStatus"), Napi::Function::New(env, _RPUStatus));
+    exports.Set(Napi::String::New(env, "_RPUCutPaper"), Napi::Function::New(env, _RPUCutPaper));
+    exports.Set(Napi::String::New(env, "_RPUPrintText"), Napi::Function::New(env, _RPUPrintText));
+    
 
     // return `exports` object
     return exports;
