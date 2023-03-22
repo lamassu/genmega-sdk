@@ -94,7 +94,7 @@ operationResult BCS_Scan(char* serialPortName, int mobilePhoneMode, int presenta
     std::string scanResult(reinterpret_cast<char const *>(scannedDataResult.scannedData.szCode));
     result.data = scanResult;
     result.iRet = iRet;
-    
+
     return result;
 }
 
