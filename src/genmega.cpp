@@ -265,11 +265,13 @@ Napi::Object _RPUPrintText(const Napi::CallbackInfo &info) {
     Napi::Buffer<char> buffer = info[0].As<Napi::Buffer<char>>();
     char* data = buffer.Data();
     const size_t length = buffer.Length();
-    char textContent[length];
+    char textContent[length+1];
 
     for(size_t i = 0; i < length; i++) {
         textContent[i] = data[i];
     }
+
+    textContent[length] = '\0';
 
     return mapToNapiObject(RPUPrintText(textContent), env); 
 }
