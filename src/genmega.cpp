@@ -19,8 +19,7 @@ Napi::Object mapToNapiObject (operationResult result, Napi::Env env) {
     return obj;
 }
 
-Napi::Object BarcodeScan(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
+Napi::Value _BCSScan(const Napi::CallbackInfo &info) {
 
     char szPortName[128];
     int presentationMode = 0, mobilePhoneMode = 0; // presentation mode enables getting barcode data continuously, not interesting for our use case
@@ -32,13 +31,18 @@ Napi::Object BarcodeScan(const Napi::CallbackInfo &info) {
     // mobile mode
     mobilePhoneMode = info[1].ToNumber();
 
-    return mapToNapiObject(BCS_Scan(szPortName, mobilePhoneMode, presentationMode), env);
+    // scan callback
+    Napi::Function callback = info[2].As<Napi::Function>();
+    
+    BCSScan(szPortName, mobilePhoneMode, presentationMode, callback);
+
+    return info.Env().Undefined();
 }
 
-Napi::Object BarcodeCancelScan(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
+Napi::Value _BCSCancelScan(const Napi::CallbackInfo &info) {
 
-    return mapToNapiObject(BCS_CancelScan(), env);
+    BCSCancelScan();
+    return info.Env().Undefined();
 }
 
 
@@ -313,8 +317,8 @@ Napi::Object _SIUReset(const Napi::CallbackInfo &info) {
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     // set keys on `exports` object
-    exports.Set(Napi::String::New(env, "BarcodeScan"), Napi::Function::New(env, BarcodeScan));
-    exports.Set(Napi::String::New(env, "BarcodeCancelScan"), Napi::Function::New(env, BarcodeCancelScan));
+    exports.Set(Napi::String::New(env, "_BCSScan"), Napi::Function::New(env, _BCSScan));
+    exports.Set(Napi::String::New(env, "_BCSCancelScan"), Napi::Function::New(env, _BCSCancelScan));
     exports.Set(Napi::String::New(env, "BAUGetLastErrorV2"), Napi::Function::New(env, BAUGetLastErrorV2));
     exports.Set(Napi::String::New(env, "BAUOpenV2"), Napi::Function::New(env, BAUOpenV2));
     exports.Set(Napi::String::New(env, "BAUResetV2"), Napi::Function::New(env, BAUResetV2));
