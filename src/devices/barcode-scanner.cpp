@@ -78,7 +78,7 @@ class ScanWorker : public Napi::AsyncWorker {
   // this function will be run inside the main event loop
   // so it is safe to use JS engine data again
   void OnOK() {
-    Callback().Call({Env().Undefined(), Napi::Number::New(Env(), 0)});
+    Callback().Call({Env().Undefined(), Napi::String::New(Env(), scannedData)});
   }
 
  private:
