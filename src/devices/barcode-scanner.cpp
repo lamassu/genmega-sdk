@@ -14,6 +14,7 @@ std::atomic<bool> sigg;
 std::mutex m;
 std::condition_variable v;
 std::string scannedData;
+int iRetScan = 0;
 
 bool pred() {
     return sigg;
@@ -34,26 +35,27 @@ void ErrorHandler(int iRet, unsigned char *errmsg) {
 
 void StartScan(char* serialPortName, int mobilePhoneMode, int presentationMode) {
     unsigned char errmsg[6] = {0};
-    int iRet = 0;
+
+    iRetScan = 0;
 
     std::unique_lock<std::mutex> lock(m);
 
     BCS_CallBackRegister(ScannedBarcodeDataCallBack);
 
     // open device serial port
-    iRet = BCS_Open(serialPortName, mobilePhoneMode);
+    iRetScan = BCS_Open(serialPortName, mobilePhoneMode);
 
     // initialize device
-    iRet = BCS_Reset();
+    iRetScan = BCS_Reset();
 
     // start scan
-    iRet = BCS_AcceptScanCode(presentationMode);
+    iRetScan = BCS_AcceptScanCode(presentationMode);
 
-    if (iRet == HM_DEV_OK) {
+    if (iRetScan == HM_DEV_OK) {
         printf("\n DEBUG: BCS READY TO SCAN \n");
     } else {
         BCS_GetLastError(errmsg);
-        ErrorHandler(iRet, errmsg);
+        ErrorHandler(iRetScan, errmsg);
     }
 }
 
@@ -78,7 +80,7 @@ class ScanWorker : public Napi::AsyncWorker {
   // this function will be run inside the main event loop
   // so it is safe to use JS engine data again
   void OnOK() {
-    Callback().Call({Env().Undefined(), Napi::String::New(Env(), scannedData)});
+    Callback().Call({Napi::Number::New(Env(), iRetScan), Napi::String::New(Env(), scannedData)});
   }
 
  private:

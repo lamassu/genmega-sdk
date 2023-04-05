@@ -22,7 +22,8 @@ Napi::Object mapToNapiObject (operationResult result, Napi::Env env) {
 Napi::Value _BCSScan(const Napi::CallbackInfo &info) {
 
     char szPortName[128];
-    int presentationMode = 0, mobilePhoneMode = 0; // presentation mode enables getting barcode data continuously, not interesting for our use case
+    int mobilePhoneMode = 0;
+    int presentationMode = 0; // presentation mode enables getting barcode data continuously, not interesting for our use case
     
     // serial port name
     std::string serialPortName = (std::string)info[0].ToString();
