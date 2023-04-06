@@ -23,7 +23,9 @@ bool pred() {
 void ScannedBarcodeDataCallBack(int iId, int iKind, BCSScanData *BcsScanData) {
     printf("\n DEBUG: BCS BarCode Data: ID-%d, KIND-%d Data:%s\n", iId, iKind, BcsScanData->szCode);
     scannedData = reinterpret_cast<char const *>(BcsScanData->szCode);
-    BCSCancelScan();
+    sigg = true;
+    v.notify_one();
+    BCS_Close();
 }
 
 void ErrorHandler(int iRet, unsigned char *errmsg) {
@@ -33,9 +35,10 @@ void ErrorHandler(int iRet, unsigned char *errmsg) {
 }
 
 
-void StartScan(char* serialPortName, int mobilePhoneMode, int presentationMode) {
+void StartScan(std::string serialPortName, int mobilePhoneMode, int presentationMode) {
     unsigned char errmsg[6] = {0};
 
+    scannedData = "";
     iRetScan = 0;
 
     std::unique_lock<std::mutex> lock(m);
@@ -43,7 +46,7 @@ void StartScan(char* serialPortName, int mobilePhoneMode, int presentationMode) 
     BCS_CallBackRegister(ScannedBarcodeDataCallBack);
 
     // open device serial port
-    iRetScan = BCS_Open(serialPortName, mobilePhoneMode);
+    iRetScan = BCS_Open(serialPortName.c_str(), mobilePhoneMode);
 
     // initialize device
     iRetScan = BCS_Reset();
@@ -61,7 +64,7 @@ void StartScan(char* serialPortName, int mobilePhoneMode, int presentationMode) 
 
 class ScanWorker : public Napi::AsyncWorker {
  public:
-  ScanWorker(Napi::Function& callback, char* serialPortName, int mobilePhoneMode, int presentationMode)
+  ScanWorker(Napi::Function& callback, std::string serialPortName, int mobilePhoneMode, int presentationMode)
       : Napi::AsyncWorker(callback), serialPortName_(serialPortName), mobilePhoneMode_(mobilePhoneMode), presentationMode_(presentationMode)  {}
   ~ScanWorker() {}
 
@@ -84,7 +87,7 @@ class ScanWorker : public Napi::AsyncWorker {
   }
 
  private:
-    char* serialPortName_;
+    std::string serialPortName_;
     int mobilePhoneMode_;
     int presentationMode_;
 };
@@ -109,7 +112,7 @@ void BCSCancelScan() {
     v.notify_one();
 }
 
-void BCSScan(char* serialPortName, int mobilePhoneMode, int presentationMode, Napi::Function callback) {
+void BCSScan(std::string serialPortName, int mobilePhoneMode, int presentationMode, Napi::Function callback) {
     sigg = false;
     ScanWorker* scanWorker = new ScanWorker(callback, serialPortName, mobilePhoneMode, presentationMode);
     scanWorker->Queue();
