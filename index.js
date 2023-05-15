@@ -3,9 +3,10 @@ const bau = require('./bau')
 const cdu = require('./cdu')
 const rpu = require('./rpu')
 const siu = require('./siu')
+const bcs = require('./bcs')
 
-exports.BarcodeScan = genmega.BarcodeScan
-exports.BarcodeCancelScan = genmega.BarcodeCancelScan
+exports.BCSScan = bcs.BCSScan
+exports.BCSCancelScan = bcs.BCSCancelScan
 exports.BAUGetLastError = bau.BAUGetLastError
 exports.BAUOpen = bau.BAUOpen
 exports.BAUReset = bau.BAUReset

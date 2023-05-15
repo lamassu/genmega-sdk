@@ -1,9 +1,9 @@
-#include "result.hpp"
+#include <napi.h>
 
 #ifndef BARCODE_SCANNER_HPP
 #define BARCODE_SCANNER_HPP
 
-operationResult BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentationMode);
-operationResult BCS_CancelScan();
+void BCSScan(std::string serialPortName, int mobilePhoneMode, int presentationMode, Napi::Function callback);
+void BCSCancelScan();
 
 #endif

@@ -1,22 +1,31 @@
+#include <atomic>
+#include <chrono>
+#include <condition_variable>
 #include <iostream>
+#include <mutex>
+#include <napi.h>
 #include <string>
 #include <thread>
 #include <time.h>
-
 #include "genmegadevice/HmDeviceIF.h"
 #include "barcode-scanner.hpp"
 
-struct {
-    bool valid = false;
-    bool canceled = false;
-    BCSScanData scannedData;
-} scannedDataResult;
+std::atomic<bool> sigg;
+std::mutex m;
+std::condition_variable v;
+std::string scannedData;
+int iRetScan = 0;
 
+bool pred() {
+    return sigg;
+}
 
-void ScannedBarcodeData(int iId, int iKind, BCSScanData *BcsScanData) {
+void ScannedBarcodeDataCallBack(int iId, int iKind, BCSScanData *BcsScanData) {
     printf("\n DEBUG: BCS BarCode Data: ID-%d, KIND-%d Data:%s\n", iId, iKind, BcsScanData->szCode);
-    scannedDataResult.scannedData = *BcsScanData;
-    scannedDataResult.valid = true;
+    scannedData = reinterpret_cast<char const *>(BcsScanData->szCode);
+    sigg = true;
+    v.notify_one();
+    BCS_Close();
 }
 
 void ErrorHandler(int iRet, unsigned char *errmsg) {
@@ -25,93 +34,70 @@ void ErrorHandler(int iRet, unsigned char *errmsg) {
     BCS_Close();
 }
 
-operationResult BCS_Scan(char* serialPortName, int mobilePhoneMode, int presentationMode) {
-    // reset scanning variables
-    scannedDataResult.valid = false;
-    scannedDataResult.canceled = false;
 
+void StartScan(std::string serialPortName, int mobilePhoneMode, int presentationMode) {
     unsigned char errmsg[6] = {0};
-    int iRet = 0;
-    time_t StartTime, CurTime;
 
-    operationResult result;
+    scannedData = "";
+    iRetScan = 0;
 
-    BCS_CallBackRegister(ScannedBarcodeData);
+    std::unique_lock<std::mutex> lock(m);
+
+    BCS_CallBackRegister(ScannedBarcodeDataCallBack);
 
     // open device serial port
-    iRet = BCS_Open(serialPortName, mobilePhoneMode);
+    iRetScan = BCS_Open(serialPortName.c_str(), mobilePhoneMode);
 
     // initialize device
-    iRet = BCS_Reset();
+    iRetScan = BCS_Reset();
 
-    if (iRet == HM_DEV_OK) {
+    // start scan
+    iRetScan = BCS_AcceptScanCode(presentationMode);
+
+    if (iRetScan == HM_DEV_OK) {
         printf("\n DEBUG: BCS READY TO SCAN \n");
     } else {
         BCS_GetLastError(errmsg);
-        ErrorHandler(iRet, errmsg);
-        result.iRet = iRet;
-        result.data = "";
-        return result;
+        ErrorHandler(iRetScan, errmsg);
     }
-
-    iRet = BCS_AcceptScanCode(presentationMode);
-
-    if (iRet == HM_DEV_OK) {
-        time(&StartTime);
-        while (1) {
-            std::this_thread::yield(); // give priority to other process/threads
-            if (scannedDataResult.canceled) {
-                iRet = BCS_CancelScanCode();
-                BCS_Close();
-                result.iRet = iRet;
-                result.data = "";
-                return result;
-            }
-            time(&CurTime);
-            if((StartTime+30) < CurTime){
-                printf("30sec Timeout and Cancel\n");
-                iRet = BCS_CancelScanCode();
-                BCS_Close();
-                result.iRet = iRet;
-                result.data = "";
-                return result;
-            }
-            if (scannedDataResult.valid && scannedDataResult.scannedData.wSize > 0) {
-                iRet = BCS_CancelScanCode();
-                break;
-            }
-        }
-    } else {
-        BCS_GetLastError(errmsg);
-        ErrorHandler(iRet, errmsg);
-        result.iRet = iRet;
-        result.data = "";
-        return result;
-    }
-
-    BCS_Close();
-
-    std::string scanResult(reinterpret_cast<char const *>(scannedDataResult.scannedData.szCode));
-    result.data = scanResult;
-    result.iRet = iRet;
-
-    return result;
 }
 
-operationResult BCS_CancelScan() { 
+class ScanWorker : public Napi::AsyncWorker {
+ public:
+  ScanWorker(Napi::Function& callback, std::string serialPortName, int mobilePhoneMode, int presentationMode)
+      : Napi::AsyncWorker(callback), serialPortName_(serialPortName), mobilePhoneMode_(mobilePhoneMode), presentationMode_(presentationMode)  {}
+  ~ScanWorker() {}
+
+  // Executed inside the worker-thread.
+  // It is not safe to access JS engine data structure
+  // here, so everything we need for input and output
+  // should go on `this`.
+  void Execute() override { 
+    std::thread t1(std::bind(StartScan, serialPortName_, mobilePhoneMode_, presentationMode_));
+    std::unique_lock<std::mutex> lock(m);
+    v.wait(lock, pred);
+    t1.join();
+  }
+
+  // Executed when the async work is complete
+  // this function will be run inside the main event loop
+  // so it is safe to use JS engine data again
+  void OnOK() {
+    Callback().Call({Napi::Number::New(Env(), iRetScan), Napi::String::New(Env(), scannedData)});
+  }
+
+ private:
+    std::string serialPortName_;
+    int mobilePhoneMode_;
+    int presentationMode_;
+};
+
+void BCSCancelScan() { 
     int iRet = 0;
     unsigned char errmsg[6] = {0};
 
-    operationResult result;
-
-    scannedDataResult.canceled = true;
-    scannedDataResult.valid = false;
-
     iRet = BCS_CancelScanCode();
     BCS_Close();
-
-    result.iRet = iRet;
-    result.data = "";
 
     if (iRet == HM_DEV_OK) {
         printf("\n DEBUG: BCS SCAN CANCELED \n");
@@ -120,5 +106,15 @@ operationResult BCS_CancelScan() {
         ErrorHandler(iRet, errmsg);
     }
 
-    return result;
+    scannedData = "";
+
+    sigg = true;
+    v.notify_one();
 }
+
+void BCSScan(std::string serialPortName, int mobilePhoneMode, int presentationMode, Napi::Function callback) {
+    sigg = false;
+    ScanWorker* scanWorker = new ScanWorker(callback, serialPortName, mobilePhoneMode, presentationMode);
+    scanWorker->Queue();
+}
+
