@@ -83,6 +83,15 @@ Napi::Object BAUStatusV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(BAUStatus(), env);
 }
 
+Napi::Object BAUSetCapabilitiesV2(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    // TODO
+    unsigned char denominations = BAU_NOTE1|BAU_NOTE2|BAU_NOTE3|BAU_NOTE4|BAU_NOTE5|BAU_NOTE6|BAU_NOTE7;
+    int directions = BAU_ONEWAY;
+    unsigned char escrow_enabled = true;
+    return mapToNapiObject(BAUSetCapabilities(denominations, directions, escrow_enabled), env);
+}
+
 Napi::Object BAUSetEnableDenomV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
@@ -319,6 +328,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "BAUResetV2"), Napi::Function::New(env, BAUResetV2));
     exports.Set(Napi::String::New(env, "BAUCloseV2"), Napi::Function::New(env, BAUCloseV2));
     exports.Set(Napi::String::New(env, "BAUStatusV2"), Napi::Function::New(env, BAUStatusV2));
+    exports.Set(Napi::String::New(env, "BAUSetCapabilitiesV2"), Napi::Function::New(env, BAUSetCapabilitiesV2));
     exports.Set(Napi::String::New(env, "BAUSetEnableDenomV2"), Napi::Function::New(env, BAUSetEnableDenomV2));
     exports.Set(Napi::String::New(env, "BAUAcceptBillV2"), Napi::Function::New(env, BAUAcceptBillV2));
     exports.Set(Napi::String::New(env, "BAUCancelV2"), Napi::Function::New(env, BAUCancelV2));

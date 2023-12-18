@@ -86,6 +86,12 @@ operationResult BAUStatus() {
     return result;
 }
 
+operationResult BAUSetCapabilities(unsigned char denominations, int directions, unsigned char escrow_enabled) {
+    operationResult result;
+    result.iRet = BAU_SetCapabilities(denominations, directions, escrow_enabled);
+    return result;
+}
+
 operationResult BAUSetEnableDenom(char* denominationData) {
     int iRet = 0;
     operationResult result;

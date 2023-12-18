@@ -47,6 +47,12 @@ exports.BAUStatus = function BAUStatus() {
     return { iRet, result };
 }
 
+exports.BAUSetCapabilities = function BAUSetCapabilities(denominations, directions, escrow_enabled) {
+    const { iRet } = genmega.BAUSetCapabilitiesV2(denominations, directions, escrow_enabled)
+    if(iRet < 0) console.error(`BAU SET CAPABILITIES: ${iRet}`);
+    return { iRet }
+}
+
 exports.BAUSetEnableDenom = function BAUSetEnableDenom(denominationData) {
     const { iRet } = genmega.BAUSetEnableDenomV2(denominationData);
     if(iRet < 0) console.error(`BAU SET ENABLE DENOM: ${iRet}`);
