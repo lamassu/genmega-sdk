@@ -49,14 +49,14 @@ exports.BAUStatus = function BAUStatus() {
 
 exports.BAUSetEnableDenom = function BAUSetEnableDenom(denominationData) {
     const { iRet } = genmega.BAUSetEnableDenomV2(denominationData);
-    if(iRet < 0) console.error(`BAU SET ENABLE DENOM: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU SET ENABLE DENOM: ${iRet}`);
     return { iRet };
 }
 
 
 exports.BAUCancel = function BAUCancel() {
     const { iRet, data } = genmega.BAUCancelV2();
-    if(iRet < 0) console.error(`BAU CANCEL BILL: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU CANCEL BILL: ${iRet}`);
     return { iRet, data };
 }
 

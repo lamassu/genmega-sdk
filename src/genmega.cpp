@@ -49,7 +49,7 @@ Napi::Value _BCSCancelScan(const Napi::CallbackInfo &info) {
 
 Napi::Object BAUGetLastErrorV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    
+
     return mapToNapiObject(BAUGetLastError(), env);
 }
 
@@ -111,19 +111,16 @@ Napi::Object BAUCancelV2(const Napi::CallbackInfo &info) {
 
 Napi::Object BAUReturnBillV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     return mapToNapiObject(BAUReturnBill(), env);
 }
 
 Napi::Object BAUStackBillV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     return mapToNapiObject(BAUStackBill(), env);
 }
 
 Napi::Object BAUGetSupportCurrencyV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     return mapToNapiObject(BAUGetSupportCurrency(), env);
 }
 
@@ -131,7 +128,6 @@ Napi::Object BAUGetSupportCurrencyV2(const Napi::CallbackInfo &info) {
 
 Napi::Object _CDUGetLastError(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     return mapToNapiObject(CDUGetLastError(), env);
 }
 
