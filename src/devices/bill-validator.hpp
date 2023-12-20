@@ -8,6 +8,7 @@ operationResult BAUOpen(char* serialPortName);
 operationResult BAUReset();
 operationResult BAUClose();
 operationResult BAUStatus();
+operationResult BAUSetCapabilities(unsigned char denominations, int directions, unsigned char escrow_enabled);
 operationResult BAUSetEnableDenom(char* denominationData);
 operationResult BAUAcceptBill(int mode);
 operationResult BAUCancel();
