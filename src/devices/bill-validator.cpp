@@ -86,8 +86,11 @@ operationResult BAUStatus() {
     return result;
 }
 
-operationResult BAUSetCapabilities(unsigned char denominations, int directions, unsigned char escrow_enabled) {
+operationResult BAUSetCapabilities(unsigned char escrow_enabled) {
     operationResult result;
+    // TODO: get denominations and directions as arguments?
+    unsigned char denominations = BAU_NOTE1|BAU_NOTE2|BAU_NOTE3|BAU_NOTE4|BAU_NOTE5|BAU_NOTE6|BAU_NOTE7;
+    int directions = BAU_ONEWAY;
     result.iRet = BAU_SetCapabilities(denominations, directions, escrow_enabled);
     return result;
 }
