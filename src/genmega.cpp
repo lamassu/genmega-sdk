@@ -85,10 +85,12 @@ Napi::Object BAUStatusV2(const Napi::CallbackInfo &info) {
 
 Napi::Object BAUSetCapabilitiesV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    // TODO
+
+    // TODO: get denominations and directions as arguments?
     unsigned char denominations = BAU_NOTE1|BAU_NOTE2|BAU_NOTE3|BAU_NOTE4|BAU_NOTE5|BAU_NOTE6|BAU_NOTE7;
     int directions = BAU_ONEWAY;
-    unsigned char escrow_enabled = true;
+
+    unsigned char escrow_enabled = info[0].ToBoolean().Value();
     return mapToNapiObject(BAUSetCapabilities(denominations, directions, escrow_enabled), env);
 }
 
