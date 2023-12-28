@@ -12,6 +12,7 @@ exports.BAUOpen = bau.BAUOpen
 exports.BAUReset = bau.BAUReset
 exports.BAUClose = bau.BAUClose
 exports.BAUStatus = bau.BAUStatus
+exports.BAUSetCapabilities = bau.BAUSetCapabilities
 exports.BAUSetEnableDenom = bau.BAUSetEnableDenom
 exports.BAUAcceptBill = bau.BAUAcceptBill
 exports.BAUCancel = bau.BAUCancel
@@ -37,4 +38,3 @@ exports.RPUCutPaper = rpu.RPUCutPaper
 exports.RPUPrintText = rpu.RPUPrintText
 exports.SIULightUp = siu.SIULightUp
 exports.SIULightDown = siu.SIULightDown
-

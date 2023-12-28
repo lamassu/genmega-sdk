@@ -1,4 +1,3 @@
-const _ = require('lodash/fp')
 const genmega = require('./build/Release/genmega.node')
 
 const LED_OFF = 0

@@ -49,7 +49,7 @@ Napi::Value _BCSCancelScan(const Napi::CallbackInfo &info) {
 
 Napi::Object BAUGetLastErrorV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    
+
     return mapToNapiObject(BAUGetLastError(), env);
 }
 
@@ -83,6 +83,12 @@ Napi::Object BAUStatusV2(const Napi::CallbackInfo &info) {
     return mapToNapiObject(BAUStatus(), env);
 }
 
+Napi::Object BAUSetCapabilitiesV2(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    unsigned char escrow_enabled = info[0].ToBoolean().Value();
+    return mapToNapiObject(BAUSetCapabilities(escrow_enabled), env);
+}
+
 Napi::Object BAUSetEnableDenomV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
@@ -111,19 +117,16 @@ Napi::Object BAUCancelV2(const Napi::CallbackInfo &info) {
 
 Napi::Object BAUReturnBillV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     return mapToNapiObject(BAUReturnBill(), env);
 }
 
 Napi::Object BAUStackBillV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     return mapToNapiObject(BAUStackBill(), env);
 }
 
 Napi::Object BAUGetSupportCurrencyV2(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     return mapToNapiObject(BAUGetSupportCurrency(), env);
 }
 
@@ -131,7 +134,6 @@ Napi::Object BAUGetSupportCurrencyV2(const Napi::CallbackInfo &info) {
 
 Napi::Object _CDUGetLastError(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     return mapToNapiObject(CDUGetLastError(), env);
 }
 
@@ -323,6 +325,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "BAUResetV2"), Napi::Function::New(env, BAUResetV2));
     exports.Set(Napi::String::New(env, "BAUCloseV2"), Napi::Function::New(env, BAUCloseV2));
     exports.Set(Napi::String::New(env, "BAUStatusV2"), Napi::Function::New(env, BAUStatusV2));
+    exports.Set(Napi::String::New(env, "BAUSetCapabilitiesV2"), Napi::Function::New(env, BAUSetCapabilitiesV2));
     exports.Set(Napi::String::New(env, "BAUSetEnableDenomV2"), Napi::Function::New(env, BAUSetEnableDenomV2));
     exports.Set(Napi::String::New(env, "BAUAcceptBillV2"), Napi::Function::New(env, BAUAcceptBillV2));
     exports.Set(Napi::String::New(env, "BAUCancelV2"), Napi::Function::New(env, BAUCancelV2));

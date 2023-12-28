@@ -1,4 +1,3 @@
-const _ = require('lodash/fp')
 const genmega = require('./build/Release/genmega.node')
 
 exports.BAUOpen = function BAUOpen(serialPortName) {
@@ -47,16 +46,22 @@ exports.BAUStatus = function BAUStatus() {
     return { iRet, result };
 }
 
+exports.BAUSetCapabilities = function BAUSetCapabilities(escrow_enabled) {
+    const { iRet } = genmega.BAUSetCapabilitiesV2(escrow_enabled)
+    if(iRet < 0) console.error(`BAU SET CAPABILITIES: ${iRet}`);
+    return { iRet }
+}
+
 exports.BAUSetEnableDenom = function BAUSetEnableDenom(denominationData) {
     const { iRet } = genmega.BAUSetEnableDenomV2(denominationData);
-    if(iRet < 0) console.error(`BAU SET ENABLE DENOM: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU SET ENABLE DENOM: ${iRet}`);
     return { iRet };
 }
 
 
 exports.BAUCancel = function BAUCancel() {
     const { iRet, data } = genmega.BAUCancelV2();
-    if(iRet < 0) console.error(`BAU CANCEL BILL: ${iRet}`); 
+    if(iRet < 0) console.error(`BAU CANCEL BILL: ${iRet}`);
     return { iRet, data };
 }
 
