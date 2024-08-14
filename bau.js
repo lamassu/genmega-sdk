@@ -24,25 +24,29 @@ exports.BAUGetLastError = function BAUGetLastError() {
 
 
 exports.BAUStatus = function BAUStatus() {
-    const result = {};
     const { iRet, data } = genmega.BAUStatusV2();
     if(iRet < 0) console.error(`BAU STATUS: ${iRet}`);
     if(data === "") console.log(`BAU STATUS EMPTY!`)
-    const values = data.split("")
-    result.bLineStatus = values[0];
-    result.bIdling = values[1];
-    result.bAccepting = values[2];
-    result.bEscrow = values[3];
-    result.bStacking = values[4];
-    result.bReturning = values[5];
-    result.bJammed = values[6];
-    result.bStackerFull = values[7];
-    result.bCassetteAttached = values[8];
-    result.bPaused = values[9];
-    result.bCalibration = values[10];
-    result.bFailure = values[11];
-    result.bPushNoPush = values[12];
-    result.bFlashDownload = values[13];
+
+    /* NOTE: order matters; see src/devices/bill-validator.cpp:BAUStatus() */
+    const [
+        bLineStatus,
+        bIdling,
+        bAccepting,
+        bEscrow,
+        bStacking,
+        bReturning,
+        bJammed,
+        bStackerFull,
+        bCassetteAttached,
+        bPaused,
+        bCalibration,
+        bFailure,
+        bPushNoPush,
+        bFlashDownload,
+    ] = data
+
+    const result = { bLineStatus, bIdling, bAccepting, bEscrow, bStacking, bReturning, bJammed, bStackerFull, bCassetteAttached, bPaused, bCalibration, bFailure, bPushNoPush, bFlashDownload }
     return { iRet, result };
 }
 

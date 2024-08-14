@@ -52,34 +52,23 @@ operationResult BAUStatus() {
     iRet = BAU_Status(&BauStatus);
     result.iRet = iRet;
     if(iRet == HM_DEV_OK) {
-        char bLineStatus = BauStatus.bLineStatus ? '1' : '0';
-        result.data.push_back(bLineStatus);
-        char bIdling = BauStatus.bIdling ? '1' : '0';
-        result.data.push_back(bIdling);
-        char bAccepting = BauStatus.bAccepting ? '1' : '0';
-        result.data.push_back(bAccepting);
-        char bEscrow = BauStatus.bEscrow ? '1' : '0';
-        result.data.push_back(bEscrow);
-        char bStacking = BauStatus.bStacking ? '1' : '0';
-        result.data.push_back(bStacking);
-        char bReturning = BauStatus.bReturning ? '1' : '0';
-        result.data.push_back(bReturning);
-        char bJammed = BauStatus.bJammed ? '1' : '0';
-        result.data.push_back(bJammed);
-        char bStackerFull = BauStatus.bStackerFull ? '1' : '0';
-        result.data.push_back(bStackerFull);
-        char bCassetteAttached = BauStatus.bCassetteAttached ? '1' : '0';
-        result.data.push_back(bCassetteAttached);
-        char bPaused = BauStatus.bPaused ? '1' : '0';
-        result.data.push_back(bPaused);
-        char bCalibration = BauStatus.bCalibration ? '1' : '0';
-        result.data.push_back(bCalibration);
-        char bFailure = BauStatus.bFailure ? '1' : '0';
-        result.data.push_back(bFailure);
-        char bPushNoPush = BauStatus.bPushNoPush ? '1' : '0';
-        result.data.push_back(bPushNoPush);
-        char bFlashDownload = BauStatus.bFlashDownload ? '1' : '0';
-        result.data.push_back(bFlashDownload);
+#define getpropinto(propname)  result.data.push_back(BauStatus.propname ? '1' : '0')
+        /* NOTE: order matters; see ../../bau.js:BAUStatus() */
+        getpropinto(bLineStatus);
+        getpropinto(bIdling);
+        getpropinto(bAccepting);
+        getpropinto(bEscrow);
+        getpropinto(bStacking);
+        getpropinto(bReturning);
+        getpropinto(bJammed);
+        getpropinto(bStackerFull);
+        getpropinto(bCassetteAttached);
+        getpropinto(bPaused);
+        getpropinto(bCalibration);
+        getpropinto(bFailure);
+        getpropinto(bPushNoPush);
+        getpropinto(bFlashDownload);
+#undef getpropinto
     } else {
         result.data = "";
     }
