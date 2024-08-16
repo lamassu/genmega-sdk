@@ -3,7 +3,7 @@
 
 #include "result.hpp"
 
-operationResult BAUOpen(char* serialPortName);
+operationResult BAUOpen (const char * serialPortName);
 operationResult BAUClose();
 operationResult BAUReset();
 operationResult BAUStatus();

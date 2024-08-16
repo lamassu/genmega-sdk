@@ -2,16 +2,13 @@
 
 #include <genmegadevice/HmDeviceIF.h>
 
-operationResult BAUOpen(char* serialPortName) {
-    unsigned char szVerInfo[10];
-    int iRet = 0;
-    operationResult result;
-
-    iRet = BAU_Open(serialPortName, OUT szVerInfo);
-
-    result.data = std::string (reinterpret_cast<char const *>(szVerInfo));
-    result.iRet = iRet;
-    return result;
+operationResult BAUOpen (const char * serialPortName)
+{
+	unsigned char szVerInfo[11] = {0};
+	operationResult result;
+	result.iRet = BAU_Open(serialPortName, szVerInfo);
+	result.data = std::string(reinterpret_cast<char const *>(szVerInfo));
+	return result;
 }
 
 operationResult BAUClose() {
