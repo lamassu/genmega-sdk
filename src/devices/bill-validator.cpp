@@ -25,35 +25,32 @@ operationResult BAUReset ()
 	return result;
 }
 
-operationResult BAUStatus() {
-    int iRet = 0;
-    BAU_STATUS BauStatus;
-    operationResult result;
-
-    iRet = BAU_Status(&BauStatus);
-    result.iRet = iRet;
-    if(iRet == HM_DEV_OK) {
-#define getpropinto(propname)  result.data.push_back(BauStatus.propname ? '1' : '0')
-        /* NOTE: order matters; see ../../bau.js:BAUStatus() */
-        getpropinto(bLineStatus);
-        getpropinto(bIdling);
-        getpropinto(bAccepting);
-        getpropinto(bEscrow);
-        getpropinto(bStacking);
-        getpropinto(bReturning);
-        getpropinto(bJammed);
-        getpropinto(bStackerFull);
-        getpropinto(bCassetteAttached);
-        getpropinto(bPaused);
-        getpropinto(bCalibration);
-        getpropinto(bFailure);
-        getpropinto(bPushNoPush);
-        getpropinto(bFlashDownload);
-#undef getpropinto
-    } else {
-        result.data = "";
-    }
-    return result;
+operationResult BAUStatus ()
+{
+	BAU_STATUS BauStatus;
+	operationResult result;
+	result.iRet = BAU_Status(&BauStatus);
+	if (result.iRet == HM_DEV_OK) {
+		result.data.reserve(14); // number of fields
+		#define getpropinto(propname) result.data.push_back(BauStatus.propname ? '1' : '0')
+		/* NOTE: order matters; see ../../bau.js:BAUStatus() */
+		getpropinto(bLineStatus);
+		getpropinto(bIdling);
+		getpropinto(bAccepting);
+		getpropinto(bEscrow);
+		getpropinto(bStacking);
+		getpropinto(bReturning);
+		getpropinto(bJammed);
+		getpropinto(bStackerFull);
+		getpropinto(bCassetteAttached);
+		getpropinto(bPaused);
+		getpropinto(bCalibration);
+		getpropinto(bFailure);
+		getpropinto(bPushNoPush);
+		getpropinto(bFlashDownload);
+		#undef getpropinto
+	}
+	return result;
 }
 
 operationResult BAUSetCapabilities(unsigned char escrow_enabled) {
