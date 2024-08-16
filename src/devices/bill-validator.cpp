@@ -4,8 +4,8 @@
 
 operationResult BAUOpen (const char * serialPortName)
 {
-	unsigned char szVerInfo[11] = {0};
 	operationResult result;
+	unsigned char szVerInfo[11] = {0};
 	result.iRet = BAU_Open(serialPortName, szVerInfo);
 	result.data = std::string(reinterpret_cast<char const *>(szVerInfo));
 	return result;
@@ -27,8 +27,8 @@ operationResult BAUReset ()
 
 operationResult BAUStatus ()
 {
-	BAU_STATUS BauStatus;
 	operationResult result;
+	BAU_STATUS BauStatus;
 	result.iRet = BAU_Status(&BauStatus);
 	if (result.iRet == HM_DEV_OK) {
 		result.data.reserve(14); // number of fields
@@ -65,22 +65,20 @@ operationResult BAUSetCapabilities (unsigned char escrow_enabled)
 
 operationResult BAUAcceptBill (int mode)
 {
-	int iBillResult = 0;
 	operationResult result;
+	int iBillResult = 0;
 	result.iRet = BAU_AcceptBill(mode, &iBillResult);
 	result.data = std::to_string(iBillResult);
 	return result;
 }
 
-operationResult BAUCancel() {
-    int iRet = 0;
-    int iBillResult;
-    operationResult result;
-
-    iRet = BAU_Cancel(&iBillResult);
-    result.iRet = iRet;
-    result.data = std::to_string(iBillResult);
-    return result;
+operationResult BAUCancel ()
+{
+	operationResult result;
+	int iBillResult = 0;
+	result.iRet = BAU_Cancel(&iBillResult);
+	result.data = std::to_string(iBillResult);
+	return result;
 }
 
 operationResult BAUStackBill() {
