@@ -88,14 +88,11 @@ operationResult BAUStackBill ()
 	return result;
 }
 
-operationResult BAUReturnBill() {
-    int iRet = 0;
-    operationResult result;
-
-    iRet = BAU_ReturnBill();
-    result.iRet = iRet;
-    result.data = "";
-    return result;
+operationResult BAUReturnBill ()
+{
+	operationResult result;
+	result.iRet = BAU_ReturnBill();
+	return result;
 }
 
 operationResult BAUSetEnableDenom(char* denominationData) {
