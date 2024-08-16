@@ -95,14 +95,11 @@ operationResult BAUReturnBill ()
 	return result;
 }
 
-operationResult BAUSetEnableDenom(char* denominationData) {
-    int iRet = 0;
-    operationResult result;
-
-    iRet = BAU_SetEnableDenom(denominationData);
-    result.iRet = iRet;
-    result.data = "";
-    return result;
+operationResult BAUSetEnableDenom (char* denominationData)
+{
+	operationResult result;
+	result.iRet = BAU_SetEnableDenom(denominationData);
+	return result;
 }
 
 operationResult BAUGetSupportCurrency() {
