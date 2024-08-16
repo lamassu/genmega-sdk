@@ -63,15 +63,13 @@ operationResult BAUSetCapabilities (unsigned char escrow_enabled)
 	return result;
 }
 
-operationResult BAUAcceptBill(int mode) {
-    int iRet = 0;
-    int iBillResult;
-    operationResult result;
-
-    iRet = BAU_AcceptBill(mode, &iBillResult);
-    result.iRet = iRet;
-    result.data = std::to_string(iBillResult);
-    return result;
+operationResult BAUAcceptBill (int mode)
+{
+	int iBillResult = 0;
+	operationResult result;
+	result.iRet = BAU_AcceptBill(mode, &iBillResult);
+	result.data = std::to_string(iBillResult);
+	return result;
 }
 
 operationResult BAUCancel() {
