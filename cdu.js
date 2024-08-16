@@ -57,25 +57,27 @@ exports.CDUSetCassetteNumber = function CDUSetCassetteNumber (cassetteNumber) {
     return { iRet }
 }
 
-exports.CDUDispense = function CDUDispense (dispenseData, numberOfCassettesEnabled) {
-    const result = []
+exports.CDUDispense = function CDUDispense (rawDispenseData, numberOfCassettesEnabled) {
+    const dispenseData = [0, 1, 2, 3, 4, 5].map(idx => rawDispenseData[idx] ?? 0)
     const { iRet, data } = genmega._CDUDispense(dispenseData, numberOfCassettesEnabled)
     if(iRet < 0) console.error(`CDU DISPENSE: ${iRet}`)
     if(data === "") console.log(`CDU DISPENSE RESULT EMPTY!`)
     const dispenseResultByCassette = data.split(";")
+    const result = []
     for(let i = 0; i < numberOfCassettesEnabled; i++) {
         const values = dispenseResultByCassette[i].split("")
-        result.push({
-            iDispensedCount: values[0],
-            iRejectedCount: values[1],
-            iPassedCount: values[2],
-            iSkewCount: values[3],
-            iAbnormalSpaceCount: values[4],
-            iLongCount: values[5],
-            iShortCount: values[6],
-            iDoubleNoteCount: values[7],
-            iHalfSizeCount: values[8]
-        })
+        const [
+            iDispensedCount,
+            iRejectedCount,
+            iPassedCount,
+            iSkewCount,
+            iAbnormalSpaceCount,
+            iLongCount,
+            iShortCount,
+            iDoubleNoteCount,
+            iHalfSizeCount,
+        ] = dispenseResultByCassette[i]
+        result.push({ iDispensedCount, iRejectedCount, iPassedCount, iSkewCount, iAbnormalSpaceCount, iLongCount, iShortCount, iDoubleNoteCount, iHalfSizeCount })
     }
     return { iRet, result }
 }
