@@ -19,7 +19,7 @@ operationResult CDUOpen (char * serialPortName)
 {
 	operationResult result;
 	unsigned char szVerInfo[15] = {0};
-	result.iRet = CDU_Open(serialPortName, OUT szVerInfo);
+	result.iRet = CDU_Open(serialPortName, szVerInfo);
 	result.data = std::string(reinterpret_cast<char const *>(szVerInfo));
 	return result;
 }

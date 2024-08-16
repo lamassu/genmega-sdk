@@ -1,13 +1,13 @@
-#include "result.hpp"
-
 #ifndef PRINTER_HPP
 #define PRINTER_HPP
 
-operationResult RPUGetLastError();
-operationResult RPUOpen(char* serialPortName);
-operationResult RPUClose();
-operationResult RPUStatus();
-operationResult RPUCutPaper();
-operationResult RPUPrintText(char* text);
+#include "result.hpp"
+
+operationResult RPUOpen (const char * serialPortName);
+operationResult RPUClose ();
+operationResult RPUStatus ();
+operationResult RPUPrintText (char * text);
+operationResult RPUCutPaper ();
+operationResult RPUGetLastError ();
 
 #endif
