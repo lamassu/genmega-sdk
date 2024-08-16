@@ -81,14 +81,11 @@ operationResult BAUCancel ()
 	return result;
 }
 
-operationResult BAUStackBill() {
-    int iRet = 0;
-    operationResult result;
-
-    iRet = BAU_StackBill();
-    result.iRet = iRet;
-    result.data = "";
-    return result;
+operationResult BAUStackBill ()
+{
+	operationResult result;
+	result.iRet = BAU_StackBill();
+	return result;
 }
 
 operationResult BAUReturnBill() {
