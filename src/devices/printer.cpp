@@ -2,7 +2,7 @@
 #include <string>
 #include <unistd.h>
 
-#include "genmegadevice/HmDeviceIF.h"
+#include <genmegadevice/HmDeviceIF.h>
 #include "printer.hpp"
 
 using namespace std;

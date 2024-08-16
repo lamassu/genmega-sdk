@@ -1,7 +1,7 @@
 
 #include <string>
 
-#include "genmegadevice/HmDeviceIF.h"
+#include <genmegadevice/HmDeviceIF.h>
 #include "leds.hpp"
 
 using namespace std;

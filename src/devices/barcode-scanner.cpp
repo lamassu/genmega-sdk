@@ -7,7 +7,7 @@
 #include <string>
 #include <thread>
 #include <time.h>
-#include "genmegadevice/HmDeviceIF.h"
+#include <genmegadevice/HmDeviceIF.h>
 #include "barcode-scanner.hpp"
 
 std::atomic<bool> sigg;

@@ -3,7 +3,7 @@
 #include <cstring>
 #include <unistd.h>
 
-#include "genmegadevice/HmDeviceIF.h"
+#include <genmegadevice/HmDeviceIF.h>
 #include "bill-dispenser.hpp"
 
 using namespace std;
