@@ -102,19 +102,19 @@ void BCSScan (std::string serialPortName, int mobilePhoneMode, int presentationM
 void BCSCancelScan ()
 {
 	unsigned char errmsg[6] = {0};
-	
+
 	int iRet = BCS_CancelScanCode();
 	BCS_Close();
-	
+
 	if (iRet == HM_DEV_OK) {
 		printf("\n DEBUG: BCS SCAN CANCELED \n");
 	} else {
 		BCS_GetLastError(errmsg);
 		ErrorHandler(iRet, errmsg);
 	}
-	
+
 	scannedData = "";
-	
+
 	sigg = true;
 	v.notify_one();
 }

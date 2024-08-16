@@ -8,7 +8,7 @@ exports.RPUGetLastError = function RPUGetLastError () {
 exports.RPUOpen = function RPUOpen (serialPortName) {
     const { iRet, data } = genmega._RPUOpen(serialPortName)
     console.log('RPU Firmware Version: ', data)
-    if(iRet < 0) console.error('RPU OPEN: ', iRet) 
+    if (iRet < 0) console.error('RPU OPEN: ', iRet)
     return { iRet }
 }
 
@@ -18,8 +18,8 @@ exports.RPUClose = function RPUClose () {
 
 exports.RPUStatus = function RPUStatus () {
     const { iRet, data } = genmega._RPUStatus()
-    if(iRet < 0) console.error(`RPU STATUS: ${iRet}`)
-    if(data === "") console.log(`RPU STATUS EMPTY!`)
+    if (iRet < 0) console.error(`RPU STATUS: ${iRet}`)
+    if (data === "") console.log(`RPU STATUS EMPTY!`)
     const [
       LineStatus,
       PaperLoad,
@@ -36,12 +36,12 @@ exports.RPUStatus = function RPUStatus () {
 
 exports.RPUCutPaper = function RPUCutPaper () {
     const { iRet } = genmega._RPUCutPaper()
-    if(iRet < 0) console.error('RPU CUT PAPER: ', iRet) 
+    if (iRet < 0) console.error('RPU CUT PAPER: ', iRet)
     return { iRet }
 }
 
 exports.RPUPrintText = function RPUPrintText (text) {
     const { iRet } = genmega._RPUPrintText(text)
-    if(iRet < 0) console.error('RPU PRINT TEXT: ', iRet) 
+    if (iRet < 0) console.error('RPU PRINT TEXT: ', iRet)
     return { iRet }
 }
