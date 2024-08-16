@@ -1,7 +1,3 @@
-#include "barcode-scanner.hpp"
-
-#include <genmegadevice/HmDeviceIF.h>
-
 #include <atomic>
 #include <condition_variable>
 #include <mutex>

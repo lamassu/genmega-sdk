@@ -1,6 +1,3 @@
-#include "printer.hpp"
-#include <genmegadevice/HmDeviceIF.h>
-
 operationResult RPUOpen (const char * serialPortName)
 {
 	operationResult result;

@@ -1,14 +1,14 @@
-#include <napi.h>
-#include <iostream>
+#include <genmegadevice/HmDeviceIF.h>
+
 #include <string>
 #include <unistd.h>
+#include <napi.h>
 
-#include "devices/result.hpp"
-#include "devices/barcode-scanner.hpp"
-#include "devices/bill-validator.hpp"
-#include "devices/bill-dispenser.hpp"
-#include "devices/printer.hpp"
-#include "devices/leds.hpp"
+struct operationResult {
+    int iRet = 0;
+    std::string data = "";
+};
+
 
 Napi::Object mapToNapiObject (operationResult result, const Napi::CallbackInfo &info)
 {
@@ -17,6 +17,10 @@ Napi::Object mapToNapiObject (operationResult result, const Napi::CallbackInfo &
 	obj.Set("data", result.data);
 	return obj;
 }
+
+// BCS
+
+#include "devices/barcode-scanner.cpp"
 
 Napi::Value _BCSScan (const Napi::CallbackInfo &info)
 {
@@ -35,6 +39,8 @@ Napi::Value _BCSCancelScan (const Napi::CallbackInfo &info)
 }
 
 // BAU new v2
+
+#include "devices/bill-validator.cpp"
 
 Napi::Object BAUGetLastErrorV2 (const Napi::CallbackInfo &info)
 {
@@ -105,6 +111,8 @@ Napi::Object BAUGetSupportCurrencyV2 (const Napi::CallbackInfo &info)
 }
 
 // CDU new v2
+
+#include "devices/bill-dispenser.cpp"
 
 Napi::Object _CDUGetLastError (const Napi::CallbackInfo &info)
 {
@@ -180,6 +188,8 @@ Napi::Object _CDUShutterAction (const Napi::CallbackInfo &info)
 
 // RPU
 
+#include "devices/printer.cpp"
+
 Napi::Object _RPUGetLastError (const Napi::CallbackInfo &info)
 {
 	return mapToNapiObject(RPUGetLastError(), info);
@@ -220,6 +230,8 @@ Napi::Object _RPUPrintText (const Napi::CallbackInfo &info)
 }
 
 // SIU
+
+#include "devices/leds.cpp"
 
 Napi::Object _SIUOpen (const Napi::CallbackInfo &info)
 {

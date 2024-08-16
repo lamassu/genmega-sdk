@@ -1,6 +1,3 @@
-#include "bill-dispenser.hpp"
-#include <genmegadevice/HmDeviceIF.h>
-
 std::string mapDispensedResultToString (DISPENSED_RESULT dispensed)
 {
 	return std::to_string(dispensed.iDispensedCount)
@@ -15,7 +12,7 @@ std::string mapDispensedResultToString (DISPENSED_RESULT dispensed)
 }
 
 
-operationResult CDUOpen (char * serialPortName)
+operationResult CDUOpen (const char * serialPortName)
 {
 	operationResult result;
 	unsigned char szVerInfo[15] = {0};

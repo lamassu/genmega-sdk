@@ -1,6 +1,3 @@
-#include "leds.hpp"
-#include <genmegadevice/HmDeviceIF.h>
-
 operationResult SIUOpen (const char * serialPortName)
 {
 	operationResult result;
