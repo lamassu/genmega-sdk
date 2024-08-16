@@ -1,19 +1,19 @@
-#include "result.hpp"
-
 #ifndef BILL_VALIDATOR_HPP
 #define BILL_VALIDATOR_HPP
 
-operationResult BAUGetLastError();
+#include "result.hpp"
+
 operationResult BAUOpen(char* serialPortName);
-operationResult BAUReset();
 operationResult BAUClose();
+operationResult BAUReset();
 operationResult BAUStatus();
 operationResult BAUSetCapabilities(unsigned char escrow_enabled);
-operationResult BAUSetEnableDenom(char* denominationData);
 operationResult BAUAcceptBill(int mode);
 operationResult BAUCancel();
-operationResult BAUReturnBill();
 operationResult BAUStackBill();
+operationResult BAUReturnBill();
+operationResult BAUSetEnableDenom(char* denominationData);
 operationResult BAUGetSupportCurrency();
+operationResult BAUGetLastError();
 
 #endif

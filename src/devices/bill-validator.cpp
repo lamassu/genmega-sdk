@@ -1,9 +1,6 @@
-#include <iostream>
-#include <string>
-#include <unistd.h>
-
-#include "genmegadevice/HmDeviceIF.h"
 #include "bill-validator.hpp"
+
+#include <genmegadevice/HmDeviceIF.h>
 
 operationResult BAUGetLastError() {
     unsigned char errmsg[6] = {0};
@@ -148,4 +145,3 @@ operationResult BAUGetSupportCurrency() {
     result.data = szDenomData;
     return result;
 }
-
