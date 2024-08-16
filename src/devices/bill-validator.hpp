@@ -4,7 +4,7 @@
 #include "result.hpp"
 
 operationResult BAUOpen (const char * serialPortName);
-operationResult BAUClose();
+operationResult BAUClose ();
 operationResult BAUReset();
 operationResult BAUStatus();
 operationResult BAUSetCapabilities(unsigned char escrow_enabled);

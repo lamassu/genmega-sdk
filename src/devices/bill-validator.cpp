@@ -11,12 +11,11 @@ operationResult BAUOpen (const char * serialPortName)
 	return result;
 }
 
-operationResult BAUClose() {
-    operationResult result;
-
-    BAU_Close();
-    result.data = "";
-    return result;
+operationResult BAUClose ()
+{
+	operationResult result;
+	BAU_Close();
+	return result;
 }
 
 operationResult BAUReset() {
