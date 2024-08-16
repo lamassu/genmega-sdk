@@ -17,19 +17,20 @@ exports.RPUClose = function RPUClose () {
 }
 
 exports.RPUStatus = function RPUStatus () {
-    const result = {}
     const { iRet, data } = genmega._RPUStatus()
     if(iRet < 0) console.error(`RPU STATUS: ${iRet}`)
     if(data === "") console.log(`RPU STATUS EMPTY!`)
-    const values = data.split("")
-    result.LineStatus = values[0]
-    result.PaperLoad = values[1]
-    result.PaperTphLoad = values[2]
-    result.PaperNearEnd = values[3]
-    result.TphLever = values[4]
-    result.PaperJam = values[5]
-    result.CutterHome = values[6]
-    result.PaperNormal = values[7]
+    const [
+      LineStatus,
+      PaperLoad,
+      PaperTphLoad,
+      PaperNearEnd,
+      TphLever,
+      PaperJam,
+      CutterHome,
+      PaperNormal,
+    ] = data
+    const result = { LineStatus, PaperLoad, PaperTphLoad, PaperNearEnd, TphLever, PaperJam, CutterHome, PaperNormal }
     return { iRet, result };
 }
 
