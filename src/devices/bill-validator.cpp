@@ -18,14 +18,11 @@ operationResult BAUClose ()
 	return result;
 }
 
-operationResult BAUReset() {
-    int iRet = 0;
-    operationResult result;
-
-    iRet = BAU_Reset();
-    result.iRet = iRet;
-    result.data = "";
-    return result;
+operationResult BAUReset ()
+{
+	operationResult result;
+	result.iRet = BAU_Reset();
+	return result;
 }
 
 operationResult BAUStatus() {
