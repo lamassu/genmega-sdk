@@ -95,7 +95,7 @@ operationResult BAUReturnBill ()
 	return result;
 }
 
-operationResult BAUSetEnableDenom (char* denominationData)
+operationResult BAUSetEnableDenom (char * denominationData)
 {
 	operationResult result;
 	result.iRet = BAU_SetEnableDenom(denominationData);
