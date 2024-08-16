@@ -3,7 +3,8 @@
 #include <genmegadevice/HmDeviceIF.h>
 #include "bill-dispenser.hpp"
 
-std::string mapDispensedResultToString(DISPENSED_RESULT dispensed) {
+std::string mapDispensedResultToString (DISPENSED_RESULT dispensed)
+{
     std::string result = "";
     result = std::to_string(dispensed.iDispensedCount)
         + std::to_string(dispensed.iRejectedCount)
@@ -18,7 +19,8 @@ std::string mapDispensedResultToString(DISPENSED_RESULT dispensed) {
 }
 
 
-operationResult CDUOpen(char* serialPortName) {
+operationResult CDUOpen (char* serialPortName)
+{
     unsigned char szVerInfo[15] = {0};
     int iRet = 0;
     operationResult result;
@@ -30,13 +32,15 @@ operationResult CDUOpen(char* serialPortName) {
     return result;
 }
 
-operationResult CDUClose() {
+operationResult CDUClose ()
+{
     operationResult result;
     CDU_Close();
     return result;
 }
 
-operationResult CDUReset(int resetMode) {
+operationResult CDUReset (int resetMode)
+{
     int iRet = 0;
     operationResult result;
 
@@ -46,14 +50,15 @@ operationResult CDUReset(int resetMode) {
     return result;
 }
 
-operationResult CDUStatus() {
+operationResult CDUStatus ()
+{
     int iRet = 0;
     CDU_STATUS CduStatus;
     operationResult result;
 
     iRet = CDU_Status(&CduStatus);
     result.iRet = iRet;
-    if(iRet == HM_DEV_OK) {
+    if (iRet == HM_DEV_OK) {
         result.data = std::to_string(CduStatus.iLineStatus)
             + std::to_string(CduStatus.iCstNum)
             + std::to_string(CduStatus.iDispenseType)
@@ -74,7 +79,8 @@ operationResult CDUStatus() {
     return result;
 }
 
-operationResult CDUSetCassetteNumber(int cassetteNumber) {
+operationResult CDUSetCassetteNumber (int cassetteNumber)
+{
     int iRet = 0;
     operationResult result;
 
@@ -84,7 +90,8 @@ operationResult CDUSetCassetteNumber(int cassetteNumber) {
     return result;
 }
 
-operationResult CDUDispense(int* dispenseData, int numberOfCassettesEnabled) {
+operationResult CDUDispense (int* dispenseData, int numberOfCassettesEnabled)
+{
     int iRet = 0;
 	DISPENSED_RESULT dispensedResult[6];
     operationResult result;
@@ -92,7 +99,7 @@ operationResult CDUDispense(int* dispenseData, int numberOfCassettesEnabled) {
     iRet = CDU_Dispense(dispenseData, dispensedResult);
     result.iRet = iRet;
 
-    for(int i = 0; i < numberOfCassettesEnabled; i++) {
+    for (int i = 0; i < numberOfCassettesEnabled; i++) {
         result.data += mapDispensedResultToString(dispensedResult[i]);
         if ((i+1) < numberOfCassettesEnabled) {
             result.data += ";";
@@ -102,7 +109,8 @@ operationResult CDUDispense(int* dispenseData, int numberOfCassettesEnabled) {
     return result;
 }
 
-operationResult CDUPresent() {
+operationResult CDUPresent ()
+{
     int iRet = 0;
     operationResult result;
 
@@ -112,7 +120,8 @@ operationResult CDUPresent() {
     return result;
 }
 
-operationResult CDUShutterAction(int action) {
+operationResult CDUShutterAction (int action)
+{
     int iRet = 0;
     operationResult result;
 
@@ -122,7 +131,8 @@ operationResult CDUShutterAction(int action) {
     return result;
 }
 
-operationResult CDUForceEject() {
+operationResult CDUForceEject ()
+{
     int iRet = 0;
     operationResult result;
 
@@ -132,7 +142,8 @@ operationResult CDUForceEject() {
     return result;
 }
 
-operationResult CDUGetLastError() {
+operationResult CDUGetLastError ()
+{
     unsigned char errmsg[6] = {0};
     operationResult result;
 
@@ -141,7 +152,8 @@ operationResult CDUGetLastError() {
     return result;
 }
 
-operationResult CDUVerifyLicenseKey(char* licenseKey) {
+operationResult CDUVerifyLicenseKey (char* licenseKey)
+{
     int iRet = 0;
     operationResult result;
 
