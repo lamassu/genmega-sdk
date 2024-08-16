@@ -3,19 +3,17 @@
 #include <genmegadevice/HmDeviceIF.h>
 #include "bill-dispenser.hpp"
 
-using namespace std;
-
-string mapDispensedResultToString(DISPENSED_RESULT dispensed) {
-    string result = "";
-    result = to_string(dispensed.iDispensedCount)
-        + to_string(dispensed.iRejectedCount)
-        + to_string(dispensed.iPassedCount)
-        + to_string(dispensed.iSkewCount)
-        + to_string(dispensed.iAbnormalSpaceCount)
-        + to_string(dispensed.iLongCount)
-        + to_string(dispensed.iShortCount)
-        + to_string(dispensed.iDoubleNoteCount)
-        + to_string(dispensed.iHalfSizeCount);
+std::string mapDispensedResultToString(DISPENSED_RESULT dispensed) {
+    std::string result = "";
+    result = std::to_string(dispensed.iDispensedCount)
+        + std::to_string(dispensed.iRejectedCount)
+        + std::to_string(dispensed.iPassedCount)
+        + std::to_string(dispensed.iSkewCount)
+        + std::to_string(dispensed.iAbnormalSpaceCount)
+        + std::to_string(dispensed.iLongCount)
+        + std::to_string(dispensed.iShortCount)
+        + std::to_string(dispensed.iDoubleNoteCount)
+        + std::to_string(dispensed.iHalfSizeCount);
     return result;
 }
 
@@ -27,7 +25,7 @@ operationResult CDUOpen(char* serialPortName) {
 
     iRet = CDU_Open(serialPortName, OUT szVerInfo);
 
-    result.data = string (reinterpret_cast<char const *>(szVerInfo));
+    result.data = std::string (reinterpret_cast<char const *>(szVerInfo));
     result.iRet = iRet;
     return result;
 }
@@ -56,20 +54,20 @@ operationResult CDUStatus() {
     iRet = CDU_Status(&CduStatus);
     result.iRet = iRet;
     if(iRet == HM_DEV_OK) {
-        result.data = to_string(CduStatus.iLineStatus)
-            + to_string(CduStatus.iCstNum)
-            + to_string(CduStatus.iDispenseType)
-            + to_string(CduStatus.iJamStatus)
-            + to_string(CduStatus.iCst1Status)
-            + to_string(CduStatus.iCst2Status)
-            + to_string(CduStatus.iCst3Status)
-            + to_string(CduStatus.iCst4Status)
-            + to_string(CduStatus.iCst5Status)
-            + to_string(CduStatus.iCst6Status)
-            + to_string(CduStatus.iShutterStatus)
-            + to_string(CduStatus.iShutterRemain)
-            + to_string(CduStatus.iStackerRemain)
-            + to_string(CduStatus.iTransporterRemain);
+        result.data = std::to_string(CduStatus.iLineStatus)
+            + std::to_string(CduStatus.iCstNum)
+            + std::to_string(CduStatus.iDispenseType)
+            + std::to_string(CduStatus.iJamStatus)
+            + std::to_string(CduStatus.iCst1Status)
+            + std::to_string(CduStatus.iCst2Status)
+            + std::to_string(CduStatus.iCst3Status)
+            + std::to_string(CduStatus.iCst4Status)
+            + std::to_string(CduStatus.iCst5Status)
+            + std::to_string(CduStatus.iCst6Status)
+            + std::to_string(CduStatus.iShutterStatus)
+            + std::to_string(CduStatus.iShutterRemain)
+            + std::to_string(CduStatus.iStackerRemain)
+            + std::to_string(CduStatus.iTransporterRemain);
     } else {
         result.data = "";
     }
@@ -139,7 +137,7 @@ operationResult CDUGetLastError() {
     operationResult result;
 
     CDU_GetLastError(errmsg);
-    result.data = string (reinterpret_cast<char const *>(errmsg));
+    result.data = std::string (reinterpret_cast<char const *>(errmsg));
     return result;
 }
 
