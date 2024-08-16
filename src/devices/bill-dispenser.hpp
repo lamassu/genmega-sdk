@@ -13,6 +13,6 @@ operationResult CDUPresent ();
 operationResult CDUShutterAction (int action);
 operationResult CDUForceEject ();
 operationResult CDUGetLastError ();
-operationResult CDUVerifyLicenseKey (char * licenseKey);
+operationResult CDUVerifyLicenseKey (char * licenseKey); // TODO(siiky): make sure licenseKey has the required minimum size
 
 #endif
