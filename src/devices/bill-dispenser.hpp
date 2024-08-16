@@ -8,7 +8,7 @@ operationResult CDUClose ();
 operationResult CDUReset (int resetMode);
 operationResult CDUStatus ();
 operationResult CDUSetCassetteNumber (int cassetteNumber);
-operationResult CDUDispense (int * dispenseCount, int numberOfCassettesEnabled);
+operationResult CDUDispense (int dispenseCount[6], int numberOfCassettesEnabled);
 operationResult CDUPresent ();
 operationResult CDUShutterAction (int action);
 operationResult CDUForceEject ();

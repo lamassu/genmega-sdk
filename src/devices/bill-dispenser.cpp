@@ -69,7 +69,7 @@ operationResult CDUSetCassetteNumber (int cassetteNumber)
 	return result;
 }
 
-operationResult CDUDispense (int * dispenseData, int numberOfCassettesEnabled)
+operationResult CDUDispense (int dispenseData[6], int numberOfCassettesEnabled)
 {
 	operationResult result;
 	DISPENSED_RESULT dispensedResult[6];
