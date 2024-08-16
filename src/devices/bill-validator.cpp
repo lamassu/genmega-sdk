@@ -1,5 +1,4 @@
 #include "bill-validator.hpp"
-
 #include <genmegadevice/HmDeviceIF.h>
 
 operationResult BAUOpen (const char * serialPortName)

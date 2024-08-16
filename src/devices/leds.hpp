@@ -1,11 +1,11 @@
-#include "result.hpp"
-
 #ifndef LEDS_HPP
 #define LEDS_HPP
 
-operationResult SIUOpen(char* serialPortName);
-operationResult SIUFlicker(int device, int type);
-operationResult SIUClose();
-operationResult SIUReset();
+#include "result.hpp"
+
+operationResult SIUOpen (const char * serialPortName);
+operationResult SIUClose ();
+operationResult SIUFlicker (int device, int type);
+operationResult SIUReset ();
 
 #endif

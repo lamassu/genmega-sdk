@@ -1,7 +1,5 @@
-#include <string>
-
-#include <genmegadevice/HmDeviceIF.h>
 #include "bill-dispenser.hpp"
+#include <genmegadevice/HmDeviceIF.h>
 
 std::string mapDispensedResultToString (DISPENSED_RESULT dispensed)
 {

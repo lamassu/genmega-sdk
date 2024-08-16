@@ -3,12 +3,12 @@
 #include <string>
 #include <unistd.h>
 
+#include "devices/result.hpp"
 #include "devices/barcode-scanner.hpp"
 #include "devices/bill-validator.hpp"
 #include "devices/bill-dispenser.hpp"
 #include "devices/printer.hpp"
 #include "devices/leds.hpp"
-#include "devices/result.hpp"
 
 
 Napi::Object mapToNapiObject (operationResult result, Napi::Env env) {
