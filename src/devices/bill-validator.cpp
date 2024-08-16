@@ -102,15 +102,13 @@ operationResult BAUSetEnableDenom (char* denominationData)
 	return result;
 }
 
-operationResult BAUGetSupportCurrency() {
-    int iRet = 0;
-    char szDenomData[512];
-    operationResult result;
-
-    iRet = BAU_GetSupportCurrency(szDenomData);
-    result.iRet = iRet;
-    result.data = szDenomData;
-    return result;
+operationResult BAUGetSupportCurrency ()
+{
+	operationResult result;
+	char szDenomData[512];
+	result.iRet = BAU_GetSupportCurrency(szDenomData);
+	result.data = std::string(reinterpret_cast<char const *>(szDenomData));
+	return result;
 }
 
 operationResult BAUGetLastError() {
