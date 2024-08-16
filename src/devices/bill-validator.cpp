@@ -2,15 +2,6 @@
 
 #include <genmegadevice/HmDeviceIF.h>
 
-operationResult BAUGetLastError() {
-    unsigned char errmsg[6] = {0};
-    operationResult result;
-
-    BAU_GetLastError(errmsg);
-    result.data = std::string (reinterpret_cast<char const *>(errmsg));
-    return result;
-}
-
 operationResult BAUOpen(char* serialPortName) {
     unsigned char szVerInfo[10];
     int iRet = 0;
@@ -23,20 +14,20 @@ operationResult BAUOpen(char* serialPortName) {
     return result;
 }
 
+operationResult BAUClose() {
+    operationResult result;
+
+    BAU_Close();
+    result.data = "";
+    return result;
+}
+
 operationResult BAUReset() {
     int iRet = 0;
     operationResult result;
 
     iRet = BAU_Reset();
     result.iRet = iRet;
-    result.data = "";
-    return result;
-}
-
-operationResult BAUClose() {
-    operationResult result;
-
-    BAU_Close();
     result.data = "";
     return result;
 }
@@ -81,16 +72,6 @@ operationResult BAUSetCapabilities(unsigned char escrow_enabled) {
     return result;
 }
 
-operationResult BAUSetEnableDenom(char* denominationData) {
-    int iRet = 0;
-    operationResult result;
-
-    iRet = BAU_SetEnableDenom(denominationData);
-    result.iRet = iRet;
-    result.data = "";
-    return result;
-}
-
 operationResult BAUAcceptBill(int mode) {
     int iRet = 0;
     int iBillResult;
@@ -102,7 +83,6 @@ operationResult BAUAcceptBill(int mode) {
     return result;
 }
 
-
 operationResult BAUCancel() {
     int iRet = 0;
     int iBillResult;
@@ -111,17 +91,6 @@ operationResult BAUCancel() {
     iRet = BAU_Cancel(&iBillResult);
     result.iRet = iRet;
     result.data = std::to_string(iBillResult);
-    return result;
-}
-
-
-operationResult BAUReturnBill() {
-    int iRet = 0;
-    operationResult result;
-
-    iRet = BAU_ReturnBill();
-    result.iRet = iRet;
-    result.data = "";
     return result;
 }
 
@@ -135,6 +104,26 @@ operationResult BAUStackBill() {
     return result;
 }
 
+operationResult BAUReturnBill() {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = BAU_ReturnBill();
+    result.iRet = iRet;
+    result.data = "";
+    return result;
+}
+
+operationResult BAUSetEnableDenom(char* denominationData) {
+    int iRet = 0;
+    operationResult result;
+
+    iRet = BAU_SetEnableDenom(denominationData);
+    result.iRet = iRet;
+    result.data = "";
+    return result;
+}
+
 operationResult BAUGetSupportCurrency() {
     int iRet = 0;
     char szDenomData[512];
@@ -143,5 +132,14 @@ operationResult BAUGetSupportCurrency() {
     iRet = BAU_GetSupportCurrency(szDenomData);
     result.iRet = iRet;
     result.data = szDenomData;
+    return result;
+}
+
+operationResult BAUGetLastError() {
+    unsigned char errmsg[6] = {0};
+    operationResult result;
+
+    BAU_GetLastError(errmsg);
+    result.data = std::string (reinterpret_cast<char const *>(errmsg));
     return result;
 }
