@@ -111,11 +111,11 @@ operationResult BAUGetSupportCurrency ()
 	return result;
 }
 
-operationResult BAUGetLastError() {
-    unsigned char errmsg[6] = {0};
-    operationResult result;
-
-    BAU_GetLastError(errmsg);
-    result.data = std::string (reinterpret_cast<char const *>(errmsg));
-    return result;
+operationResult BAUGetLastError ()
+{
+	operationResult result;
+	unsigned char errmsg[6] = {0};
+	BAU_GetLastError(errmsg);
+	result.data = std::string(reinterpret_cast<char const *>(errmsg));
+	return result;
 }
