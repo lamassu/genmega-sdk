@@ -1,7 +1,7 @@
 operationResult BAUOpen (const char * serialPortName)
 {
 	operationResult result;
-	unsigned char szVerInfo[11] = {0};
+	unsigned char szVerInfo[10] = {0};
 	result.iRet = BAU_Open(serialPortName, szVerInfo);
 	result.data = std::string(reinterpret_cast<char const *>(szVerInfo));
 	return result;
