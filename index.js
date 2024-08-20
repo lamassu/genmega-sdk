@@ -30,6 +30,7 @@ exports.CDUDispense = cdu.CDUDispense
 exports.CDUPresent = cdu.CDUPresent
 exports.CDUForceEject = cdu.CDUForceEject
 exports.CDUShutterAction = cdu.CDUShutterAction
+exports.CDURetract = cdu.CDURetract
 exports.RPUGetLastError = rpu.RPUGetLastError
 exports.RPUOpen = rpu.RPUOpen
 exports.RPUClose = rpu.RPUClose

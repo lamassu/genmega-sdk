@@ -96,3 +96,9 @@ exports.CDUShutterAction = function CDUShutterAction (action) {
     if (iRet < 0) console.error('CDU SHUTTER ACTION: ', iRet)
     return { iRet }
 }
+
+exports.CDURetract = function CDURetract () {
+    const { iRet } = genmega._CDURetract()
+    if (iRet < 0) console.error('CDU RETRACT: ', iRet)
+    return { iRet }
+}

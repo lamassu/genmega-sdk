@@ -186,6 +186,11 @@ Napi::Object _CDUShutterAction (const Napi::CallbackInfo &info)
 	return mapToNapiObject(CDUShutterAction(action), info);
 }
 
+Napi::Object _CDURetract (const Napi::CallbackInfo &info)
+{
+	return mapToNapiObject(CDURetract(), info);
+}
+
 // RPU
 
 #include "devices/printer.cpp"

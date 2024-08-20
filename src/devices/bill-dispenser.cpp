@@ -95,6 +95,13 @@ operationResult CDUShutterAction (int action)
 	return result;
 }
 
+operationResult CDURetract ()
+{
+	operationResult result;
+	result.iRet = CDU_Retract();
+	return result;
+}
+
 operationResult CDUForceEject ()
 {
 	operationResult result;
