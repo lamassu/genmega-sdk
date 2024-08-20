@@ -53,7 +53,7 @@ operationResult BAUSetCapabilities (unsigned char escrow_enabled)
 {
 	operationResult result;
 	unsigned char denominations = BAU_NOTE1|BAU_NOTE2|BAU_NOTE3|BAU_NOTE4|BAU_NOTE5|BAU_NOTE6|BAU_NOTE7;
-	int directions = BAU_ONEWAY;
+	int directions = BAU_FOURWAY;
 	escrow_enabled = escrow_enabled ? BAU_OKESCROW : BAU_NOESCROW;
 	result.iRet = BAU_SetCapabilities(denominations, directions, escrow_enabled);
 	return result;
