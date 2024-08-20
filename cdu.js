@@ -58,8 +58,9 @@ exports.CDUSetCassetteNumber = function CDUSetCassetteNumber (cassetteNumber) {
     return { iRet }
 }
 
-exports.CDUDispense = function CDUDispense (rawDispenseData, numberOfCassettesEnabled) {
-    const dispenseData = [0, 1, 2, 3, 4, 5].map(idx => rawDispenseData[idx] ?? 0)
+exports.CDUDispense = function CDUDispense (dispenseData, numberOfCassettesEnabled) {
+    dispenseData = [0, 1, 2, 3, 4, 5].map(idx => dispenseData[idx] ?? 0)
+    if (numberOfCassettesEnabled > dispenseData.length) numberOfCassettesEnabled = dispenseData.length
     const { iRet, data } = genmega._CDUDispense(dispenseData, numberOfCassettesEnabled)
     if (iRet < 0) console.error(`CDU DISPENSE: ${iRet}`)
     if (data === "") console.log(`CDU DISPENSE RESULT EMPTY!`)
