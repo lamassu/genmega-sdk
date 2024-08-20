@@ -17,25 +17,26 @@ exports.CDUClose = function CDUClose () {
 }
 
 exports.CDUStatus = function CDUStatus () {
-    const result = {}
     const { iRet, data } = genmega._CDUStatus()
     if (iRet < 0) console.error(`CDU STATUS: ${iRet}`)
     if (data === "") console.log(`CDU STATUS EMPTY!`)
-    const values = data.split("")
-    result.iLineStatus = values[0]
-    result.iCstNum = values[1]
-    result.iDispenseType = values[2]
-    result.iJamStatus = values[3]
-    result.iCst1Status = values[4]
-    result.iCst2Status = values[5]
-    result.iCst3Status = values[6]
-    result.iCst4Status = values[7]
-    result.iCst5Status = values[8]
-    result.iCst6Status = values[9]
-    result.iShutterStatus = values[10]
-    result.iShutterRemain = values[11]
-    result.iStackerRemain = values[12]
-    result.iTransporterRemain = values[13]
+    const [
+      iLineStatus,
+      iCstNum,
+      iDispenseType,
+      iJamStatus,
+      iCst1Status,
+      iCst2Status,
+      iCst3Status,
+      iCst4Status,
+      iCst5Status,
+      iCst6Status,
+      iShutterStatus,
+      iShutterRemain,
+      iStackerRemain,
+      iTransporterRemain,
+    ] = data
+    const result = { iLineStatus, iCstNum, iDispenseType, iJamStatus, iCst1Status, iCst2Status, iCst3Status, iCst4Status, iCst5Status, iCst6Status, iShutterStatus, iShutterRemain, iStackerRemain, iTransporterRemain }
     return { iRet, result }
 }
 
@@ -65,7 +66,6 @@ exports.CDUDispense = function CDUDispense (rawDispenseData, numberOfCassettesEn
     const dispenseResultByCassette = data.split(";")
     const result = []
     for(let i = 0; i < numberOfCassettesEnabled; i++) {
-        const values = dispenseResultByCassette[i].split("")
         const [
             iDispensedCount,
             iRejectedCount,
