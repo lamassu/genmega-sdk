@@ -64,22 +64,18 @@ exports.CDUDispense = function CDUDispense (dispenseData, numberOfCassettesEnabl
     const { iRet, data } = genmega._CDUDispense(dispenseData, numberOfCassettesEnabled)
     if (iRet < 0) console.error(`CDU DISPENSE: ${iRet}`)
     if (data === "") console.log(`CDU DISPENSE RESULT EMPTY!`)
-    const dispenseResultByCassette = data.split(";")
-    const result = []
-    for(let i = 0; i < numberOfCassettesEnabled; i++) {
-        const [
-            iDispensedCount,
-            iRejectedCount,
-            iPassedCount,
-            iSkewCount,
-            iAbnormalSpaceCount,
-            iLongCount,
-            iShortCount,
-            iDoubleNoteCount,
-            iHalfSizeCount,
-        ] = dispenseResultByCassette[i]
-        result.push({ iDispensedCount, iRejectedCount, iPassedCount, iSkewCount, iAbnormalSpaceCount, iLongCount, iShortCount, iDoubleNoteCount, iHalfSizeCount })
-    }
+    const result = data.split(";")
+      .map(([
+        iDispensedCount,
+        iRejectedCount,
+        iPassedCount,
+        iSkewCount,
+        iAbnormalSpaceCount,
+        iLongCount,
+        iShortCount,
+        iDoubleNoteCount,
+        iHalfSizeCount,
+      ]) => ({ iDispensedCount, iRejectedCount, iPassedCount, iSkewCount, iAbnormalSpaceCount, iLongCount, iShortCount, iDoubleNoteCount, iHalfSizeCount }))
     return { iRet, result }
 }
 
