@@ -289,6 +289,7 @@ Napi::Object Init (Napi::Env env, Napi::Object exports)
 	exports.Set(Napi::String::New(env, "_CDUPresent"), Napi::Function::New(env, _CDUPresent));
 	exports.Set(Napi::String::New(env, "_CDUForceEject"), Napi::Function::New(env, _CDUForceEject));
 	exports.Set(Napi::String::New(env, "_CDUShutterAction"), Napi::Function::New(env, _CDUShutterAction));
+	exports.Set(Napi::String::New(env, "_CDURetract"), Napi::Function::New(env, _CDURetract));
 	exports.Set(Napi::String::New(env, "_RPUGetLastError"), Napi::Function::New(env, _RPUGetLastError));
 	exports.Set(Napi::String::New(env, "_RPUOpen"), Napi::Function::New(env, _RPUOpen));
 	exports.Set(Napi::String::New(env, "_RPUClose"), Napi::Function::New(env, _RPUClose));
