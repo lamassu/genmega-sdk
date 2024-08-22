@@ -8,7 +8,7 @@ exports.CDUGetLastError = function CDUGetLastError () {
 exports.CDUOpen = function CDUOpen (serialPortName) {
     const { iRet, data } = genmega._CDUOpen(serialPortName)
     console.log('CDU Firmware Version: ', data)
-    if(iRet < 0) console.error('CDU OPEN: ', iRet) 
+    if (iRet < 0) console.error('CDU OPEN: ', iRet)
     return { iRet }
 }
 
@@ -17,83 +17,88 @@ exports.CDUClose = function CDUClose () {
 }
 
 exports.CDUStatus = function CDUStatus () {
-    const result = {}
     const { iRet, data } = genmega._CDUStatus()
-    if(iRet < 0) console.error(`CDU STATUS: ${iRet}`)
-    if(data === "") console.log(`CDU STATUS EMPTY!`)
-    const values = data.split("")
-    result.iLineStatus = values[0]
-    result.iCstNum = values[1]
-    result.iDispenseType = values[2]
-    result.iJamStatus = values[3]
-    result.iCst1Status = values[4]
-    result.iCst2Status = values[5]
-    result.iCst3Status = values[6]
-    result.iCst4Status = values[7]
-    result.iCst5Status = values[8]
-    result.iCst6Status = values[9]
-    result.iShutterStatus = values[10]
-    result.iShutterRemain = values[11]
-    result.iStackerRemain = values[12]
-    result.iTransporterRemain = values[13]
+    if (iRet < 0) console.error(`CDU STATUS: ${iRet}`)
+    if (data === "") console.log(`CDU STATUS EMPTY!`)
+    const [
+      iLineStatus,
+      iCstNum,
+      iDispenseType,
+      iJamStatus,
+      iCst1Status,
+      iCst2Status,
+      iCst3Status,
+      iCst4Status,
+      iCst5Status,
+      iCst6Status,
+      iShutterStatus,
+      iShutterRemain,
+      iStackerRemain,
+      iTransporterRemain,
+    ] = data
+    const result = { iLineStatus, iCstNum, iDispenseType, iJamStatus, iCst1Status, iCst2Status, iCst3Status, iCst4Status, iCst5Status, iCst6Status, iShutterStatus, iShutterRemain, iStackerRemain, iTransporterRemain }
     return { iRet, result }
 }
 
 exports.CDUVerifyLicenseKey = function CDUVerifyLicenseKey (licenseKey) {
     const { iRet } = genmega._CDUVerifyLicenseKey(licenseKey)
-    if(iRet < 0) console.error('CDU VERIFY LICENSE KEY: ', iRet) 
+    if (iRet < 0) console.error('CDU VERIFY LICENSE KEY: ', iRet)
     return { iRet }
 }
 
 exports.CDUReset = function CDUReset (resetMode) {
     const { iRet } = genmega._CDUReset(resetMode)
-    if(iRet < 0) console.error('CDU RESET: ', iRet) 
+    if (iRet < 0) console.error('CDU RESET: ', iRet)
     return { iRet }
 }
 
 exports.CDUSetCassetteNumber = function CDUSetCassetteNumber (cassetteNumber) {
     const { iRet } = genmega._CDUSetCassetteNumber(cassetteNumber)
-    if(iRet < 0) console.error('CDU SET CASSETTE NUMBER: ', iRet) 
+    if (iRet < 0) console.error('CDU SET CASSETTE NUMBER: ', iRet)
     return { iRet }
 }
 
 exports.CDUDispense = function CDUDispense (dispenseData, numberOfCassettesEnabled) {
-    const result = []
+    dispenseData = [0, 1, 2, 3, 4, 5].map(idx => dispenseData[idx] ?? 0)
+    if (numberOfCassettesEnabled > dispenseData.length) numberOfCassettesEnabled = dispenseData.length
     const { iRet, data } = genmega._CDUDispense(dispenseData, numberOfCassettesEnabled)
-    if(iRet < 0) console.error(`CDU DISPENSE: ${iRet}`)
-    if(data === "") console.log(`CDU DISPENSE RESULT EMPTY!`)
-    const dispenseResultByCassette = data.split(";")
-    for(let i = 0; i < numberOfCassettesEnabled; i++) {
-        const values = dispenseResultByCassette[i].split("")
-        result.push({
-            iDispensedCount: values[0],
-            iRejectedCount: values[1],
-            iPassedCount: values[2],
-            iSkewCount: values[3],
-            iAbnormalSpaceCount: values[4],
-            iLongCount: values[5],
-            iShortCount: values[6],
-            iDoubleNoteCount: values[7],
-            iHalfSizeCount: values[8]
-        })
-    }
+    if (iRet < 0) console.error(`CDU DISPENSE: ${iRet}`)
+    if (data === "") console.log(`CDU DISPENSE RESULT EMPTY!`)
+    const result = data.split(";")
+      .map(([
+        iDispensedCount,
+        iRejectedCount,
+        iPassedCount,
+        iSkewCount,
+        iAbnormalSpaceCount,
+        iLongCount,
+        iShortCount,
+        iDoubleNoteCount,
+        iHalfSizeCount,
+      ]) => ({ iDispensedCount, iRejectedCount, iPassedCount, iSkewCount, iAbnormalSpaceCount, iLongCount, iShortCount, iDoubleNoteCount, iHalfSizeCount }))
     return { iRet, result }
 }
 
 exports.CDUPresent = function CDUPresent () {
     const { iRet } = genmega._CDUPreset()
-    if(iRet < 0) console.error('CDU PRESET: ', iRet) 
+    if (iRet < 0) console.error('CDU PRESET: ', iRet)
     return { iRet }
 }
 
 exports.CDUForceEject = function CDUForceEject () {
     const { iRet } = genmega._CDUForceEject()
-    if(iRet < 0) console.error('CDU FORCE EJECT: ', iRet) 
+    if (iRet < 0) console.error('CDU FORCE EJECT: ', iRet)
     return { iRet }
 }
 
 exports.CDUShutterAction = function CDUShutterAction (action) {
     const { iRet } = genmega._CDUShutterAction(action)
-    if(iRet < 0) console.error('CDU SHUTTER ACTION: ', iRet) 
+    if (iRet < 0) console.error('CDU SHUTTER ACTION: ', iRet)
+    return { iRet }
+}
+
+exports.CDURetract = function CDURetract () {
+    const { iRet } = genmega._CDURetract()
+    if (iRet < 0) console.error('CDU RETRACT: ', iRet)
     return { iRet }
 }
