@@ -26,7 +26,7 @@ Napi::Value _BCSScan (const Napi::CallbackInfo &info)
 {
 	std::string serialPortName = info[0].ToString();
 	int mobilePhoneMode = info[1].ToNumber();
-	int presentationMode = 0; // presentation mode enables getting barcode data continuously, not interesting for our use case
+	char presentationMode = BCS_PRESENTATION_DISABLE; // presentation mode enables getting barcode data continuously, not interesting for our use case
 	Napi::Function callback = info[2].As<Napi::Function>();
 	BCSScan(serialPortName, mobilePhoneMode, presentationMode, callback);
 	return info.Env().Undefined();
