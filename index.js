@@ -1,4 +1,4 @@
-const bau = require('./bau')
+exports.bau = require('./bau')
 const cdu = require('./cdu')
 const rpu = require('./rpu')
 const siu = require('./siu')
@@ -6,19 +6,6 @@ const bcs = require('./bcs')
 
 exports.BCSScan = bcs.BCSScan
 exports.BCSCancelScan = bcs.BCSCancelScan
-exports.BAUGetLastError = bau.BAUGetLastError
-exports.BAUOpen = bau.BAUOpen
-exports.BAUReset = bau.BAUReset
-exports.BAUClose = bau.BAUClose
-exports.BAUStatus = bau.BAUStatus
-exports.BAUSetCapabilities = bau.BAUSetCapabilities
-exports.BAUSetEnableDenom = bau.BAUSetEnableDenom
-exports.BAUAcceptBill = bau.BAUAcceptBill
-exports.BAUCancel = bau.BAUCancel
-exports.BAUReject = bau.BAUReject
-exports.BAUStack = bau.BAUStack
-exports.BAUGetSupportCurrency = bau.BAUGetSupportCurrency
-exports.CDUGetLastError = cdu.CDUGetLastError
 exports.CDUOpen = cdu.CDUOpen
 exports.CDUClose = cdu.CDUClose
 exports.CDUStatus = cdu.CDUStatus
