@@ -1,22 +1,20 @@
 const genmega = require('./build/Release/genmega.node')
 
-exports.CDUGetLastError = function CDUGetLastError () {
+exports.getLastError = () => {
     const { data } = genmega._BAUGetLastError()
     return { data }
 }
 
-exports.CDUOpen = function CDUOpen (serialPortName) {
+exports.open = serialPortName => {
     const { iRet, data } = genmega._CDUOpen(serialPortName)
     console.log('CDU Firmware Version: ', data)
     if (iRet < 0) console.error('CDU OPEN: ', iRet)
     return { iRet }
 }
 
-exports.CDUClose = function CDUClose () {
-    return genmega._CDUClose()
-}
+exports.close = () => genmega._CDUClose()
 
-exports.CDUStatus = function CDUStatus () {
+exports.status = () => {
     const { iRet, data } = genmega._CDUStatus()
     if (iRet < 0) console.error(`CDU STATUS: ${iRet}`)
     if (data === "") console.log(`CDU STATUS EMPTY!`)
@@ -40,25 +38,25 @@ exports.CDUStatus = function CDUStatus () {
     return { iRet, result }
 }
 
-exports.CDUVerifyLicenseKey = function CDUVerifyLicenseKey (licenseKey) {
+exports.verifyLicenseKey = licenseKey => {
     const { iRet } = genmega._CDUVerifyLicenseKey(licenseKey)
     if (iRet < 0) console.error('CDU VERIFY LICENSE KEY: ', iRet)
     return { iRet }
 }
 
-exports.CDUReset = function CDUReset (resetMode) {
+exports.reset = resetMode => {
     const { iRet } = genmega._CDUReset(resetMode)
     if (iRet < 0) console.error('CDU RESET: ', iRet)
     return { iRet }
 }
 
-exports.CDUSetCassetteNumber = function CDUSetCassetteNumber (cassetteNumber) {
+exports.setCassetteNumber = cassetteNumber => {
     const { iRet } = genmega._CDUSetCassetteNumber(cassetteNumber)
     if (iRet < 0) console.error('CDU SET CASSETTE NUMBER: ', iRet)
     return { iRet }
 }
 
-exports.CDUDispense = function CDUDispense (dispenseData, numberOfCassettesEnabled) {
+exports.dispense = (dispenseData, numberOfCassettesEnabled) => {
     dispenseData = [0, 1, 2, 3, 4, 5].map(idx => dispenseData[idx] ?? 0)
     if (numberOfCassettesEnabled > dispenseData.length) numberOfCassettesEnabled = dispenseData.length
     const { iRet, data } = genmega._CDUDispense(dispenseData, numberOfCassettesEnabled)
@@ -79,25 +77,25 @@ exports.CDUDispense = function CDUDispense (dispenseData, numberOfCassettesEnabl
     return { iRet, result }
 }
 
-exports.CDUPresent = function CDUPresent () {
+exports.present = () => {
     const { iRet } = genmega._CDUPreset()
     if (iRet < 0) console.error('CDU PRESET: ', iRet)
     return { iRet }
 }
 
-exports.CDUForceEject = function CDUForceEject () {
+exports.forceEject = () => {
     const { iRet } = genmega._CDUForceEject()
     if (iRet < 0) console.error('CDU FORCE EJECT: ', iRet)
     return { iRet }
 }
 
-exports.CDUShutterAction = function CDUShutterAction (action) {
+exports.shutterAction = action => {
     const { iRet } = genmega._CDUShutterAction(action)
     if (iRet < 0) console.error('CDU SHUTTER ACTION: ', iRet)
     return { iRet }
 }
 
-exports.CDURetract = function CDURetract () {
+exports.retract = () => {
     const { iRet } = genmega._CDURetract()
     if (iRet < 0) console.error('CDU RETRACT: ', iRet)
     return { iRet }
