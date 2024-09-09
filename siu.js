@@ -1,6 +1,6 @@
 const genmega = require('./build/Release/genmega.node')
 
-exports.SIULightUp = function SIULightUp (serialPortName, device, type) {
+exports.lightUp = (serialPortName, device, type) => {
     const { iRet: iRetOpen, data } = genmega._SIUOpen(serialPortName);
     if (iRetOpen < 0) {
         console.error('SIU OPEN: ', iRetOpen)
@@ -11,7 +11,7 @@ exports.SIULightUp = function SIULightUp (serialPortName, device, type) {
     return { iRet }
 }
 
-exports.SIULightDown = function SIULightDown (device) {
+exports.lightDown = device => {
     const { iRet } = genmega._SIUReset()
     genmega._SIUClose()
     return { iRet }
