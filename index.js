@@ -1,4 +1,3 @@
-const genmega = require('./build/Release/genmega.node')
 const bau = require('./bau')
 const cdu = require('./cdu')
 const rpu = require('./rpu')
