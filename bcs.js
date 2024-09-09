@@ -1,10 +1,10 @@
 const genmega = require('./build/Release/genmega.node')
 
-exports.BCSScan = function BCSScan(serialPortName, mobilePhoneMode) {
+exports.scan = (serialPortName, mobilePhoneMode) => {
   return new Promise(resolve => {
     /* There's a timeout at ~30s, but we never learn of it... */
     const timeout = setTimeout(() => {
-      exports.BCSCancelScan()
+      exports.cancelScan()
       return resolve({ iRet: -9, code: null })
     }, 31000)
 
@@ -20,6 +20,4 @@ exports.BCSScan = function BCSScan(serialPortName, mobilePhoneMode) {
   })
 }
 
-exports.BCSCancelScan = function BCSCancelScan() {
-    return genmega._BCSCancelScan()
-}
+exports.cancelScan = () => genmega._BCSCancelScan()

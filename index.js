@@ -1,12 +1,9 @@
 exports.bau = require('./bau')
+exports.bcs = require('./bcs')
 const cdu = require('./cdu')
 const rpu = require('./rpu')
 const siu = require('./siu')
-const bcs = require('./bcs')
 
-exports.BCSScan = bcs.BCSScan
-exports.BCSCancelScan = bcs.BCSCancelScan
-exports.CDUOpen = cdu.CDUOpen
 exports.CDUClose = cdu.CDUClose
 exports.CDUStatus = cdu.CDUStatus
 exports.CDUVerifyLicenseKey = cdu.CDUVerifyLicenseKey
