@@ -1,4 +1,7 @@
 module.exports = {
+  '3': 'Waiting or doing some action (BAU, BA2 Device Only)',
+  '2': 'Power down',
+  '1': 'Processing/Data OK',
   '0': 'Function Success',
   '-1': 'Hardware Error or Function Fail',
   '-2': 'Function of the previous operation is not completed',
@@ -27,5 +30,4 @@ module.exports = {
   '-25': 'The file not exist or not opened in the file path',
   '-26': 'Unknown error occurs',
   '-27': 'Need to check the status of the device to determine whether to proceed.',
-  '3': 'Waiting or doing some action (BAU, BA2 Device Only)'
 }
