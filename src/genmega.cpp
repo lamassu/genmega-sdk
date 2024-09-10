@@ -5,15 +5,15 @@
 #include <napi.h>
 
 struct operationResult {
-    int iRet = 0;
-    std::string data = "";
+	int return_int = 0;
+	std::string data = "";
 };
 
 
 Napi::Object mapToNapiObject (operationResult result, const Napi::CallbackInfo &info)
 {
 	Napi::Object obj = Napi::Object::New(info.Env());
-	obj.Set("iRet", result.iRet);
+	obj.Set("return_int", result.return_int);
 	obj.Set("data", result.data);
 	return obj;
 }

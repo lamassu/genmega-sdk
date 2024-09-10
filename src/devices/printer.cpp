@@ -2,7 +2,7 @@ operationResult RPUOpen (const char * serialPortName)
 {
 	operationResult result;
 	char szVerInfo[10] = {0};
-	result.iRet = RPU_Open(serialPortName, szVerInfo);
+	result.return_int = RPU_Open(serialPortName, szVerInfo);
 	result.data = std::string(reinterpret_cast<char const *>(szVerInfo));
 	return result;
 }
@@ -18,8 +18,8 @@ operationResult RPUStatus ()
 {
 	operationResult result;
 	RPU_STATUS RpuStatus;
-	result.iRet = RPU_Status(&RpuStatus);
-	if (result.iRet == HM_DEV_OK) {
+	result.return_int = RPU_Status(&RpuStatus);
+	if (result.return_int == HM_DEV_OK) {
 		result.data.reserve(8); // number of fields
 		#define getpropinto(propname) result.data.push_back(RpuStatus.propname ? '1' : '0')
 		getpropinto(LineStatus);
@@ -38,14 +38,14 @@ operationResult RPUStatus ()
 operationResult RPUPrintText (char * text)
 {
 	operationResult result;
-	result.iRet = RPU_PrintText(text);
+	result.return_int = RPU_PrintText(text);
 	return result;
 }
 
 operationResult RPUCutPaper ()
 {
 	operationResult result;
-	result.iRet = RPU_CutPaper();
+	result.return_int = RPU_CutPaper();
 	return result;
 }
 
