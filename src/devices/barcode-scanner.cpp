@@ -30,7 +30,7 @@ void ScannedBarcodeDataCallBack (int iId, int iKind, BCSScanData * BcsScanData)
 	_bcs_scan_con.notify_all();
 }
 
-void StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode)
+bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode)
 {
 	_bcs_data = std::string("");
 	_bcs_iRet = 0;
@@ -57,13 +57,14 @@ void StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 	}
 
 	fprintf(stderr, "\n DEBUG: BCS READY TO SCAN \n");
-	return;
+	return true;
 
 error:
 	unsigned char errmsg[6] = {0};
 	BCS_GetLastError(errmsg);
 	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", _bcs_iRet, where, errmsg);
 	BCS_Close();
+	return false;
 }
 
 struct _BCS_ScanWorker : public Napi::AsyncWorker
@@ -76,7 +77,8 @@ public:
 	void Execute() override
 	{
 		std::unique_lock<std::mutex> lock(_bcs_m);
-		StartScan(serialPortName, mobilePhoneMode, presentationMode);
+		if (!StartScan(serialPortName, mobilePhoneMode, presentationMode))
+			return;
 
 		/*
 		 * "pred can be optionally provided to detect spurious wakeup."
