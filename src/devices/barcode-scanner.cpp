@@ -31,13 +31,6 @@ void ScannedBarcodeDataCallBack (int iId, int iKind, BCSScanData * BcsScanData)
 	//BCS_Close();
 }
 
-void ErrorHandler (int iRet, const char * where)
-{
-	unsigned char errmsg[6] = {0};
-	BCS_GetLastError(errmsg);
-	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", iRet, where, errmsg);
-}
-
 void StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode)
 {
 	_bcs_data = std::string("");
@@ -68,7 +61,9 @@ void StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 	return;
 
 error:
-	ErrorHandler(_bcs_iRet, where);
+	unsigned char errmsg[6] = {0};
+	BCS_GetLastError(errmsg);
+	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", _bcs_iRet, where, errmsg);
 	BCS_Close();
 }
 
