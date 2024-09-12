@@ -5,24 +5,27 @@ const return_messages = require('./return_messages')
 exports.scan = (serialPortName, mobilePhoneMode) => {
   return new Promise(resolve => {
     /* There's a timeout at ~30s, but we never learn of it... */
-    const timeout = setTimeout(() => {
-      exports.cancelScan()
+    let timeout = setTimeout(() => {
+      timeout = null
       const decoded = null
       const return_int = -9
       const return_code = return_codes[return_int]
       const return_message = return_messages[return_int]
-      return resolve({ decoded, return_int, return_code, return_message })
+      resolve({ decoded, return_int, return_code, return_message })
+      exports.cancelScan()
     }, 31000)
 
     genmega._BCSScan(
       serialPortName,
       mobilePhoneMode,
       (return_int, decoded) => {
-        clearTimeout(timeout)
-        console.log("BCSScan resolving with return_int", return_int, "and decoded", decoded)
-        const return_code = return_codes[return_int]
-        const return_message = return_messages[return_int]
-        return resolve({ decoded, return_int, return_code, return_message })
+        if (timeout) {
+          clearTimeout(timeout)
+          console.log("BCSScan resolving with return_int", return_int, "and decoded", decoded)
+          const return_code = return_codes[return_int]
+          const return_message = return_messages[return_int]
+          resolve({ decoded, return_int, return_code, return_message })
+        }
       }
     )
   })
