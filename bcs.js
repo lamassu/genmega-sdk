@@ -9,9 +9,7 @@ exports.scan = (serialPortName, mobilePhoneMode) => {
       timeout = null
       const decoded = null
       const return_int = -9
-      const return_code = return_codes[return_int]
-      const return_message = return_messages[return_int]
-      resolve({ decoded, return_int, return_code, return_message })
+      resolve({ decoded, return_int })
       exports.cancelScan()
     }, 31000)
 
@@ -22,13 +20,17 @@ exports.scan = (serialPortName, mobilePhoneMode) => {
         if (timeout) {
           clearTimeout(timeout)
           console.log("BCSScan resolving with return_int", return_int, "and decoded", decoded)
-          const return_code = return_codes[return_int]
-          const return_message = return_messages[return_int]
-          resolve({ decoded, return_int, return_code, return_message })
+          resolve({ decoded, return_int })
         }
       }
     )
   })
+  .then(({ decoded, return_int }) => ({
+    decoded,
+    return_int,
+    return_code: return_codes[return_int],
+    return_message: return_messages[return_int],
+  }))
 }
 
 exports.cancelScan = () => genmega._BCSCancelScan()
