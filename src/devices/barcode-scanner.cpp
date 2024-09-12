@@ -28,7 +28,6 @@ void ScannedBarcodeDataCallBack (int iId, int iKind, BCSScanData * BcsScanData)
 
 	_bcs_stop = true;
 	_bcs_scan_con.notify_all();
-	//BCS_Close();
 }
 
 void StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode)
@@ -84,6 +83,7 @@ public:
 		 * https://en.cppreference.com/w/cpp/thread/condition_variable/wait
 		 */
 		_bcs_scan_con.wait(lock, _bcs_stop_pred);
+		BCS_Close();
 	}
 
 	void OnOK()
