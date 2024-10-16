@@ -7,7 +7,7 @@ static std::atomic<bool> _bcs_stop;
 static std::mutex _bcs_m;
 static std::condition_variable _bcs_scan_con;
 static std::string _bcs_data;
-static int _bcs_iRet = 0;
+static int _bcs_return_int = 0;
 
 
 static bool _bcs_stop_pred ()
@@ -33,25 +33,25 @@ void ScannedBarcodeDataCallBack (int iId, int iKind, BCSScanData * BcsScanData)
 bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode)
 {
 	_bcs_data = std::string("");
-	_bcs_iRet = 0;
+	_bcs_return_int = 0;
 	const char * where = "";
 
 	BCS_CallBackRegister(ScannedBarcodeDataCallBack);
 
-	_bcs_iRet = BCS_Open(serialPortName.c_str(), mobilePhoneMode);
-	if (_bcs_iRet != HM_DEV_OK) {
+	_bcs_return_int = BCS_Open(serialPortName.c_str(), mobilePhoneMode);
+	if (_bcs_return_int != HM_DEV_OK) {
 		where = "BCS_Open";
 		goto error;
 	}
 
-	_bcs_iRet = BCS_Reset();
-	if (_bcs_iRet != HM_DEV_OK) {
+	_bcs_return_int = BCS_Reset();
+	if (_bcs_return_int != HM_DEV_OK) {
 		where = "BCS_Reset";
 		goto error;
 	}
 
-	_bcs_iRet = BCS_AcceptScanCode(presentationMode);
-	if (_bcs_iRet != HM_DEV_OK) {
+	_bcs_return_int = BCS_AcceptScanCode(presentationMode);
+	if (_bcs_return_int != HM_DEV_OK) {
 		where = "BCS_AcceptScanCode";
 		goto error;
 	}
@@ -62,7 +62,7 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 error:
 	unsigned char errmsg[6] = {0};
 	BCS_GetLastError(errmsg);
-	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", _bcs_iRet, where, errmsg);
+	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", _bcs_return_int, where, errmsg);
 	BCS_Close();
 	return false;
 }
@@ -90,7 +90,7 @@ public:
 
 	void OnOK()
 	{
-		Callback().Call({Napi::Number::New(Env(), _bcs_iRet), Napi::String::New(Env(), _bcs_data)});
+		Callback().Call({Napi::Number::New(Env(), _bcs_return_int), Napi::String::New(Env(), _bcs_data)});
 	}
 
 private:
@@ -104,7 +104,7 @@ void BCSCancelScan ()
 	BCS_CancelScanCode();
 	BCS_Close();
 	_bcs_stop = true;
-	_bcs_iRet = HM_DEV_CANCEL;
+	_bcs_return_int = HM_DEV_CANCEL;
 	_bcs_data = std::string("");
 	_bcs_scan_con.notify_all();
 }

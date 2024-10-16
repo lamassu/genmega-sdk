@@ -5,15 +5,15 @@
 #include <napi.h>
 
 struct operationResult {
-    int iRet = 0;
-    std::string data = "";
+	int return_int = 0;
+	std::string data = "";
 };
 
 
 Napi::Object mapToNapiObject (operationResult result, const Napi::CallbackInfo &info)
 {
 	Napi::Object obj = Napi::Object::New(info.Env());
-	obj.Set("iRet", result.iRet);
+	obj.Set("return_int", result.return_int);
 	obj.Set("data", result.data);
 	return obj;
 }
@@ -77,10 +77,7 @@ Napi::Object BAUSetCapabilitiesV2 (const Napi::CallbackInfo &info)
 Napi::Object BAUSetEnableDenomV2 (const Napi::CallbackInfo &info)
 {
 	std::string denominationData = info[0].ToString();
-	char * szSetData = new char [denominationData.length() + 1];
-	std::strcpy(szSetData, denominationData.c_str());
-	Napi::Object ret = mapToNapiObject(BAUSetEnableDenom(szSetData), info);
-	delete[] szSetData;
+	Napi::Object ret = mapToNapiObject(BAUSetEnableDenom(denominationData.data()), info);
 	return ret;
 }
 
@@ -138,10 +135,7 @@ Napi::Object _CDUStatus (const Napi::CallbackInfo &info)
 Napi::Object _CDUVerifyLicenseKey (const Napi::CallbackInfo &info)
 {
 	std::string licenseKey = info[0].ToString();
-	char * szLicenseKey = new char [licenseKey.length() + 1];
-	std::strcpy(szLicenseKey, licenseKey.c_str());
-	Napi::Object ret = mapToNapiObject(CDUVerifyLicenseKey(szLicenseKey), info);
-	delete[] szLicenseKey;
+	Napi::Object ret = mapToNapiObject(CDUVerifyLicenseKey(licenseKey.data()), info);
 	return ret;
 }
 
@@ -223,14 +217,8 @@ Napi::Object _RPUCutPaper (const Napi::CallbackInfo &info)
 
 Napi::Object _RPUPrintText (const Napi::CallbackInfo &info)
 {
-	Napi::Buffer<char> buffer = info[0].As<Napi::Buffer<char>>();
-
-	const size_t length = buffer.Length();
-	char * textContent = new char [length + 1];
-	std::memcpy(textContent, buffer.Data(), length);
-	textContent[length] = '\0';
-	Napi::Object ret = mapToNapiObject(RPUPrintText(textContent), info);
-	delete[] textContent;
+	std::string textContent = info[0].ToString();
+	Napi::Object ret = mapToNapiObject(RPUPrintText(textContent.data()), info);
 	return ret;
 }
 
