@@ -1,6 +1,6 @@
 {
-  "name": "genmega",
-  "version": "1.1.0",
+  "name": "@lamassu/genmega",
+  "version": "1.2.0",
   "description": "A node.js wrapper for the genmega SDK implementation",
   "main": "index.js",
   "directories": {
@@ -13,7 +13,7 @@
     "genmega"
   ],
   "author": "José Oliveira <jose.oliveira@hypha.ch>",
-  "license": "ISC",
+  "license": "./LICENSE",
   "dependencies": {
     "node-addon-api": "^5.0.0"
   }
