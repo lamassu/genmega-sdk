@@ -102,7 +102,6 @@ private:
 void BCSCancelScan ()
 {
 	BCS_CancelScanCode();
-	BCS_Close();
 	_bcs_stop = true;
 	_bcs_return_int = HM_DEV_CANCEL;
 	_bcs_data = std::string("");
