@@ -9,6 +9,7 @@ exports.scan = (serialPortName, mobilePhoneMode) => {
       timeout = null
       const decoded = null
       const return_int = -9
+      console.log("BCSScan timeout callback called")
       resolve({ decoded, return_int })
       exports.cancelScan()
     }, 31000)
@@ -17,6 +18,7 @@ exports.scan = (serialPortName, mobilePhoneMode) => {
       serialPortName,
       mobilePhoneMode,
       (return_int, decoded) => {
+        console.log("BCSScan result callback called with return_int", return_int, "and decoded", decoded, "(timedout?", !timeout ,")")
         if (timeout) {
           clearTimeout(timeout)
           console.log("BCSScan resolving with return_int", return_int, "and decoded", decoded)
