@@ -30,11 +30,51 @@ void ScannedBarcodeDataCallBack (int iId, int iKind, BCSScanData * BcsScanData)
 	_bcs_scan_con.notify_all();
 }
 
-bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode)
+#define literal_array_length(arr) (sizeof(arr)/sizeof((arr)[0]))
+
+struct operationResult BCSGetInfo (std::string serialPortName)
+{
+	struct operationResult ret;
+	const char * where = "";
+
+	// TODO remove this magic number (contacted GenMega, waiting)
+	unsigned char deviceInfor[1025] = {0};
+
+	ret.return_int = BCS_Open(serialPortName.c_str(), 0);
+	if (ret.return_int != HM_DEV_OK) {
+		where = "BCS_Open";
+		goto error;
+	}
+
+	ret.return_int = BCS_GetInfor(deviceInfor);
+	if (ret.return_int != HM_DEV_OK) {
+		where = "BCS_GetInfor";
+		goto error;
+	}
+	deviceInfor[literal_array_length(deviceInfor)-1] = '\0';
+	ret.data = std::string(reinterpret_cast<const char*>(deviceInfor), literal_array_length(deviceInfor));
+
+	BCS_Close();
+
+	return ret;
+
+error:
+	unsigned char errmsg[7] = {0};
+	BCS_GetLastError(errmsg);
+	errmsg[literal_array_length(errmsg)-1] = '\0';
+	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", ret.return_int, where, errmsg);
+	BCS_Close();
+	return ret;
+}
+
+bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentationMode, std::vector<std::string> extensions)
 {
 	_bcs_data = std::string("");
 	_bcs_return_int = 0;
 	const char * where = "";
+
+	const uint32_t nextensions = extensions.size();
+	unsigned char * extension = nullptr;
 
 	BCS_CallBackRegister(ScannedBarcodeDataCallBack);
 
@@ -50,12 +90,15 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 		goto error;
 	}
 
-//   this is for Newland scanners, unclear what happens on honeywell
-  _bcs_return_int = BCS_SetCommand(reinterpret_cast<unsigned char*>(const_cast<char*>("EXPLVL5")));
-	if (_bcs_return_int != HM_DEV_OK) {
-		where = "BCS_SetCommand";
-		goto error;
+	for (uint32_t i = 0; i < nextensions; i++) {
+		extension = reinterpret_cast<unsigned char *>(const_cast<char *>(extensions[i].c_str()));
+		_bcs_return_int = BCS_SetCommand(extension);
+		if (_bcs_return_int != HM_DEV_OK) {
+			where = "BCS_SetCommand";
+			goto error;
+		}
 	}
+	extension = nullptr;
 
 	_bcs_return_int = BCS_AcceptScanCode(presentationMode);
 	if (_bcs_return_int != HM_DEV_OK) {
@@ -67,8 +110,9 @@ bool StartScan (std::string serialPortName, int mobilePhoneMode, char presentati
 	return true;
 
 error:
-	unsigned char errmsg[6] = {0};
+	unsigned char errmsg[7] = {0};
 	BCS_GetLastError(errmsg);
+	errmsg[literal_array_length(errmsg)-1] = '\0';
 	fprintf(stderr, "GM DEBUG: BCS FAIL (%d) at %s: %s\n", _bcs_return_int, where, errmsg);
 	BCS_Close();
 	return false;
@@ -77,14 +121,20 @@ error:
 struct _BCS_ScanWorker : public Napi::AsyncWorker
 {
 public:
-	_BCS_ScanWorker(Napi::Function& callback, std::string serialPortName, int mobilePhoneMode, char presentationMode)
-		: Napi::AsyncWorker(callback), serialPortName(serialPortName), mobilePhoneMode(mobilePhoneMode), presentationMode(presentationMode) {}
+	_BCS_ScanWorker(Napi::Function& callback, std::string serialPortName, int mobilePhoneMode, char presentationMode, std::vector<std::string> extensions) :
+		Napi::AsyncWorker(callback),
+		serialPortName(serialPortName),
+		mobilePhoneMode(mobilePhoneMode),
+		presentationMode(presentationMode),
+		extensions(extensions)
+	{}
+
 	~_BCS_ScanWorker() {}
 
 	void Execute() override
 	{
 		std::unique_lock<std::mutex> lock(_bcs_m);
-		if (!StartScan(serialPortName, mobilePhoneMode, presentationMode))
+		if (!StartScan(serialPortName, mobilePhoneMode, presentationMode, extensions))
 			return;
 
 		/*
@@ -104,6 +154,7 @@ private:
 	std::string serialPortName;
 	int mobilePhoneMode;
 	int presentationMode;
+	std::vector<std::string> extensions;
 };
 
 void BCSCancelScan ()
@@ -115,9 +166,9 @@ void BCSCancelScan ()
 	_bcs_scan_con.notify_all();
 }
 
-void BCSScan (std::string serialPortName, int mobilePhoneMode, char presentationMode, Napi::Function callback)
+void BCSScan (std::string serialPortName, int mobilePhoneMode, char presentationMode, std::vector<std::string> extensions, Napi::Function callback)
 {
 	_bcs_stop = false;
-	_BCS_ScanWorker * _bcs_scanWorker = new _BCS_ScanWorker(callback, serialPortName, mobilePhoneMode, presentationMode);
+	_BCS_ScanWorker * _bcs_scanWorker = new _BCS_ScanWorker(callback, serialPortName, mobilePhoneMode, presentationMode, extensions);
 	_bcs_scanWorker->Queue();
 }

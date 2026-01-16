@@ -22,13 +22,30 @@ Napi::Object mapToNapiObject (operationResult result, const Napi::CallbackInfo &
 
 #include "devices/barcode-scanner.cpp"
 
+std::vector<std::string> _JSArrayOfStringToVectorOfString (Napi::Array extensions)
+{
+	uint32_t length = extensions.Length();
+	std::vector<std::string> ret;
+	ret.reserve(length);
+	for (uint32_t i = 0; i < length; i++)
+		ret.push_back(std::string(extensions.Get(i).ToString()));
+	return ret;
+}
+
+Napi::Value _BCSGetInfo (const Napi::CallbackInfo &info)
+{
+	std::string serialPortName = info[0].ToString();
+	return mapToNapiObject(BCSGetInfo(serialPortName), info);
+}
+
 Napi::Value _BCSScan (const Napi::CallbackInfo &info)
 {
 	std::string serialPortName = info[0].ToString();
 	int mobilePhoneMode = info[1].ToNumber();
 	char presentationMode = BCS_PRESENTATION_DISABLE; // presentation mode enables getting barcode data continuously, not interesting for our use case
-	Napi::Function callback = info[2].As<Napi::Function>();
-	BCSScan(serialPortName, mobilePhoneMode, presentationMode, callback);
+	std::vector<std::string> extensions = _JSArrayOfStringToVectorOfString(info[2].As<Napi::Array>());
+	Napi::Function callback = info[3].As<Napi::Function>();
+	BCSScan(serialPortName, mobilePhoneMode, presentationMode, extensions, callback);
 	return info.Env().Undefined();
 }
 
@@ -77,7 +94,8 @@ Napi::Object BAUSetCapabilitiesV2 (const Napi::CallbackInfo &info)
 Napi::Object BAUSetEnableDenomV2 (const Napi::CallbackInfo &info)
 {
 	std::string denominationData = info[0].ToString();
-	Napi::Object ret = mapToNapiObject(BAUSetEnableDenom(denominationData.data()), info);
+	char * denominationDataPtr = const_cast<char *>(denominationData.c_str());
+	Napi::Object ret = mapToNapiObject(BAUSetEnableDenom(denominationDataPtr), info);
 	return ret;
 }
 
@@ -219,7 +237,8 @@ Napi::Object _RPUCutPaper (const Napi::CallbackInfo &info)
 Napi::Object _RPUPrintText (const Napi::CallbackInfo &info)
 {
 	std::string textContent = info[0].ToString();
-	Napi::Object ret = mapToNapiObject(RPUPrintText(textContent.data()), info);
+	char * textContentPtr = const_cast<char *>(textContent.c_str());
+	Napi::Object ret = mapToNapiObject(RPUPrintText(textContentPtr), info);
 	return ret;
 }
 
@@ -253,6 +272,7 @@ Napi::Object _SIUReset (const Napi::CallbackInfo &info)
 
 Napi::Object Init (Napi::Env env, Napi::Object exports)
 {
+	exports.Set(Napi::String::New(env, "_BCSGetInfo"), Napi::Function::New(env, _BCSGetInfo));
 	exports.Set(Napi::String::New(env, "_BCSScan"), Napi::Function::New(env, _BCSScan));
 	exports.Set(Napi::String::New(env, "_BCSCancelScan"), Napi::Function::New(env, _BCSCancelScan));
 	exports.Set(Napi::String::New(env, "BAUGetLastErrorV2"), Napi::Function::New(env, BAUGetLastErrorV2));
